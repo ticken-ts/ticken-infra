@@ -7,12 +7,13 @@ terraform {
   }
 }
 
+variable "keycloak_client_secret" {
+  type = string
+}
+
 provider "keycloak" {
     client_id     = "terraform"
-    client_secret = "pIRQefR2XbFLB3Tuqw7MuyXE6oDjJ9bt" // remove
+    client_secret =  var.keycloak_client_secret
     url           = "http://localhost:8080"
     base_path     = "" // required for new keycloack version
 }
-
-
-
