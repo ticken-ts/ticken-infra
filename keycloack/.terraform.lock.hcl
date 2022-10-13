@@ -6,6 +6,7 @@ provider "registry.terraform.io/mrparkers/keycloak" {
   constraints = "3.11.0-rc.0"
   hashes = [
     "h1:CvmPQfaKPQxV3mL2/jcFdOzs5rmJRdFUeaI1RK6rM5s=",
+    "h1:xjMd3ktrIyenCkazLtLCiPqeAzwqKfKeadK3QitAdCw=",
     "zh:090c639d5adacc36dc05370abd512a45a98897c2bb5f57b675bb10da781713dc",
     "zh:335654526a322c7977391be1a90cefae10b6de991d12b060b38d0c643771f4e9",
     "zh:510f7d708a7acca56b21974c741461ea899cffea22d65b1e722d609445038185",
