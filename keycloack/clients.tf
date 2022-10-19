@@ -1,14 +1,21 @@
 resource "keycloak_openid_client_scope" "attendant_app" {
-  realm_id               = keycloak_realm.attendants_realm.id
-  name                   = "attendant-app"
-  description            = "add all necessary scopes to attendant's app"
+  realm_id    = keycloak_realm.attendants_realm.id
+  name        = "attendant-app"
+  description = "add all necessary scopes to attendant's app"
 }
 
-resource "keycloak_openid_audience_protocol_mapper" "attendant_audience_mapper" {
+resource "keycloak_openid_audience_protocol_mapper" "ticket_service_audience_mapper" {
   realm_id                 = keycloak_realm.attendants_realm.id
   client_scope_id          = keycloak_openid_client_scope.attendant_app.id
-  name                     = "ticken-attendants-app-audience-mapper"
-  included_custom_audience = "ticken-attendants-app"
+  name                     = "ticket-service-audience-mapper"
+  included_custom_audience = "ticken.ticket.service"
+}
+
+resource "keycloak_openid_audience_protocol_mapper" "user_service_audience_mapper" {
+  realm_id                 = keycloak_realm.attendants_realm.id
+  client_scope_id          = keycloak_openid_client_scope.attendant_app.id
+  name                     = "user-service-audience-mapper"
+  included_custom_audience = "ticken.user.service"
 }
 
 resource "keycloak_openid_client" "postman_attendant_app" {
