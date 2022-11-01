@@ -11,9 +11,14 @@ variable "keycloak_client_secret" {
   type = string
 }
 
+variable "keycloak_url" {
+  type = string
+  default = "http://localhost:8080"
+}
+
 provider "keycloak" {
     client_id     = "terraform"
-    client_secret =  var.keycloak_client_secret
-    url           = "http://localhost:8080"
-    base_path     = "" // required for new keycloack version
+    url           = var.keycloak_url
+    client_secret = var.keycloak_client_secret
+    base_path     = "" // required for new keycloak version
 }
