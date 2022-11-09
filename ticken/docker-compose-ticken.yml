@@ -1,0 +1,125 @@
+version: '3.9'
+
+networks:
+  central_perk:
+    name: fabric_test
+    external: true
+    driver: bridge
+
+services:
+  ticken-ticket-service:
+    container_name: "ticken.ticket.service"
+    depends_on:
+      - ticken-bus
+      - ticken-ticket-service-db
+    restart: on-failure
+    build: ../../ticken-ticket-service
+    environment:
+      - ENV=stage
+      - CONFIG_FILE_PATH=/config
+      - CONFIG_FILE_NAME=config.ticket.service.json
+      - DB_CONN_STRING=mongodb://admin:admin@ticken-ticket-service-db:27017/?authSource=admin
+      - BUS_CONN_STRING=amqp://admin:admin@ticken-bus:5672/
+    ports:
+      - "9000:8080"
+    volumes:
+      - ../certificates:/certificates
+      - ../configs/config.ticket.service.json:/config/config.ticket.service.json
+    networks:
+      - central_perk
+
+  ticken-ticket-service-db:
+    container_name: "ticken.ticket.service.db"
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+    volumes:
+      - ./apps/db/ticket-service:/apps/mongo
+    networks:
+      - central_perk
+
+  ticken-event-service:
+    container_name: "ticken.event.service"
+    depends_on:
+      - ticken-bus
+      - ticken-event-service-db
+    restart: on-failure
+    build: ../../ticken-event-service
+    ports:
+      - "9001:8080"
+    environment:
+      - ENV=stage
+      - CONFIG_FILE_PATH=/config
+      - CONFIG_FILE_NAME=config.event.service.json
+      - DB_CONN_STRING=mongodb://admin:admin@ticken-event-service-db:27017/?authSource=admin
+      - BUS_CONN_STRING=amqp://admin:admin@ticken-bus:5672/
+    volumes:
+      - ../certificates:/certificates
+      - ../configs/config.event.service.json:/config/config.event.service.json
+    networks:
+      - central_perk
+
+  ticken-event-service-db:
+    container_name: "ticken.event.service.db"
+    image: mongo:latest
+    ports:
+      - "27018:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+    volumes:
+      - ./apps/db/event-service:/apps/mongo
+    networks:
+      - central_perk
+
+  ticken-validator-service:
+    container_name: "ticken.validator.service"
+    depends_on:
+      - ticken-bus
+      - ticken-validator-service-db
+    restart: on-failure
+    build: ../../ticken-validator-service
+    ports:
+      - "9002:8080"
+    environment:
+      - ENV=stage
+      - CONFIG_FILE_PATH=/config
+      - CONFIG_FILE_NAME=config.validator.service.json
+      - DB_CONN_STRING=mongodb://admin:admin@ticken-validator-service-db:27017/?authSource=admin
+      - BUS_CONN_STRING=amqp://admin:admin@ticken-bus:5672/
+    volumes:
+      - ../certificates:/certificates
+      - ../configs/config.validator.service.json:/config/config.validator.service.json
+    networks:
+      - central_perk
+
+  ticken-validator-service-db:
+    container_name: "ticken.validator.service.db"
+    image: mongo:latest
+    ports:
+      - "27019:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+    volumes:
+      - ./apps/db/validator-service:/apps/mongo
+    networks:
+      - central_perk
+
+  ticken-bus:
+    container_name: "ticken.bus"
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin
+    volumes:
+      - ~/app/bus/data/:/var/lib/rabbitmq/
+      - ~/app/bus/log/:/var/log/rabbitmq
+    networks:
+      - central_perk
