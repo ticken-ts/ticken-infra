@@ -1,0 +1,38 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: bootstrap-network
+spec:
+  template:
+    spec:
+      containers:
+        - name: bootstrap-network
+          image: hyperledger/fabric-tools:2.3
+          workingDir: /
+          volumeMounts:
+            - mountPath: /orgs
+              name: fabricfiles
+              subPath: orgs
+            - mountPath: /configtx
+              name: fabricfiles
+              subPath: configtx
+            - mountPath: /system-genesis-block
+              name: fabricfiles
+              subPath: system-genesis-block
+            - mountPath: /channel-artifacts
+              name: fabricfiles
+              subPath: channel-artifacts
+            - mountPath: /scripts
+              name: fabricfiles
+              subPath: scripts
+          command:
+            - /bin/bash
+            - -c
+            - |
+              ./scripts/create-genesis.sh &&
+              ./scripts/create-channel.sh
+      restartPolicy: Never
+      volumes:
+        - name: fabricfiles
+          persistentVolumeClaim:
+            claimName: common-pvc
