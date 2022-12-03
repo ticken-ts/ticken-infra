@@ -1,12 +1,12 @@
 kind: Service
 apiVersion: v1
 metadata:
-    name: ${ORG_NAME}
+    name: ${ORG_NAME}-ord-node0
     labels:
-        run: ${ORG_NAME}
+        run: ${ORG_NAME}-ord-node0
 spec:
     selector:
-        name: ${ORG_NAME}
+        name: ${ORG_NAME}-ord-node0
     type: ClusterIP
     ports:
         - protocol: TCP

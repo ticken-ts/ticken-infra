@@ -1,29 +1,12 @@
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: local-storage
-provisioner: kubernetes.io/no-provisioner
-volumeBindingMode: WaitForFirstConsumer
-
----
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: local-pv
+  name: ticken-pv
 spec:
-  capacity:
-    storage: 10Gi
+  storageClassName: standard
   accessModes:
     - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: local-storage
-  local:
-    path: /tmp/ticken-pv
-  nodeAffinity:
-    required:
-      nodeSelectorTerms:
-        - matchExpressions:
-            - key: kubernetes.io/hostname
-              operator: In
-              values:
-                - ticken-pvtbc-network-control-plane
+  capacity:
+    storage: 2Gi
+  hostPath:
+    path: /ticken-pv/

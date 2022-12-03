@@ -11,24 +11,24 @@ export FABRIC_CA_CLIENT_HOME="/orgs/ord-orgs/${ORG_NAME}/"
 mkdir -p $FABRIC_CA_CLIENT_HOME
 
 fabric-ca-client enroll \
-  -u https://admin:adminpw@ca-orderer:10054 \
+  -u https://admin:adminpw@${CA_NAME}:7054 \
   --caname ca-${ORG_NAME} \
   --tls.certfiles "/orgs/fabric-ca/${ORG_NAME}/tls-cert.pem"
 
-echo 'NodeOUs:
+echo "NodeOUs:
   Enable: true
   ClientOUIdentifier:
-    Certificate: cacerts/ca-orderer-10054-ca-orderer.pem
+    Certificate: cacerts/ca-${ORG_NAME}-7054-ca-${ORG_NAME}.pem
     OrganizationalUnitIdentifier: client
   PeerOUIdentifier:
-    Certificate: cacerts/ca-orderer-10054-ca-orderer.pem
+    Certificate: cacerts/ca-${ORG_NAME}-7054-ca-${ORG_NAME}.pem
     OrganizationalUnitIdentifier: peer
   AdminOUIdentifier:
-    Certificate: cacerts/ca-orderer-10054-ca-orderer.pem
+    Certificate: cacerts/ca-${ORG_NAME}-7054-ca-${ORG_NAME}.pem
     OrganizationalUnitIdentifier: admin
   OrdererOUIdentifier:
-    Certificate: cacerts/ca-orderer-10054-ca-orderer.pem
-    OrganizationalUnitIdentifier: orderer' > "/orgs/ord-orgs/${ORG_NAME}/msp/config.yaml"
+    Certificate: cacerts/ca-${ORG_NAME}-7054-ca-${ORG_NAME}.pem
+    OrganizationalUnitIdentifier: orderer" > "/orgs/ord-orgs/${ORG_NAME}/msp/config.yaml"
 
 fabric-ca-client register \
   --caname ca-${ORG_NAME} \
@@ -47,42 +47,42 @@ fabric-ca-client register \
 
 
 fabric-ca-client enroll \
-  -u https://orderer:ordererpw@ca-orderer:10054 \
+  -u https://orderer:ordererpw@ca-${ORG_NAME}:7054 \
   --caname ca-${ORG_NAME} \
-  -M "/orgs/ord-orgs/${ORG_NAME}/nodes/orderer0.${ORG_DOMAIN}/msp" \
-  --csr.hosts orderer.${ORG_DOMAIN} \
+  -M "/orgs/ord-orgs/${ORG_NAME}/nodes/ord0.${ORG_DOMAIN}/msp" \
+  --csr.hosts ord0.${ORG_DOMAIN} \
   --csr.hosts localhost \
   --csr.hosts ca-${ORG_DOMAIN} \
   --tls.certfiles "/orgs/fabric-ca/${ORG_NAME}/tls-cert.pem"
 
 cp "/orgs/ord-orgs/${ORG_NAME}/msp/config.yaml" \
-   "/orgs/ord-orgs/${ORG_NAME}/nodes/orderer0.${ORG_DOMAIN}/msp/config.yaml"
+   "/orgs/ord-orgs/${ORG_NAME}/nodes/ord0.${ORG_DOMAIN}/msp/config.yaml"
 
 fabric-ca-client enroll \
-  -u https://orderer:ordererpw@ca-orderer:10054 \
-  --caname ca-${ORG_DOMAIN} \
-  -M "/orgs/ord-orgs/${ORG_NAME}/nodes/orderer0.${ORG_DOMAIN}/tls" \
+  -u https://orderer:ordererpw@ca-${ORG_NAME}:7054 \
+  --caname ca-${ORG_NAME} \
+  -M "/orgs/ord-orgs/${ORG_NAME}/nodes/ord0.${ORG_DOMAIN}/tls" \
   --enrollment.profile tls \
-  --csr.hosts orderer0.${ORG_DOMAIN} \
+  --csr.hosts ord0.${ORG_DOMAIN} \
   --csr.hosts localhost \
   --csr.hosts ca-${ORG_NAME} \
   --tls.certfiles "/orgs/fabric-ca/${ORG_NAME}/tls-cert.pem"
 
-cp "/orgs/orgs-orgs/${ORG_NAME}/nodes/orderer0.${ORG_DOMAIN}/tls/tlscacerts/"* \
-   "/orgs/orgs-orgs/${ORG_NAME}/nodes/orderer0.${ORG_DOMAIN}/tls/ca.crt"
+cp "/orgs/ord-orgs/${ORG_NAME}/nodes/ord0.${ORG_DOMAIN}/tls/tlscacerts/"* \
+   "/orgs/ord-orgs/${ORG_NAME}/nodes/ord0.${ORG_DOMAIN}/tls/ca.crt"
 
-cp "/orgs/ord-orgs/${ORG_NAME}/nodes/orderer0.${ORG_DOMAIN}/tls/signcerts/"* \
-   "/orgs/ord-orgs/${ORG_NAME}/nodes/orderer0.${ORG_DOMAIN}/tls/server.crt"
+cp "/orgs/ord-orgs/${ORG_NAME}/nodes/ord0.${ORG_DOMAIN}/tls/signcerts/"* \
+   "/orgs/ord-orgs/${ORG_NAME}/nodes/ord0.${ORG_DOMAIN}/tls/server.crt"
 
-cp "/orgs/ord-orgs/${ORG_NAME}/nodes/orderer0.${ORG_DOMAIN}/tls/keystore/"* \
-   "/orgs/ord-orgs/${ORG_NAME}/nodes/orderer0.${ORG_DOMAIN}/tls/server.key"
+cp "/orgs/ord-orgs/${ORG_NAME}/nodes/ord0.${ORG_DOMAIN}/tls/keystore/"* \
+   "/orgs/ord-orgs/${ORG_NAME}/nodes/ord0.${ORG_DOMAIN}/tls/server.key"
 
-mkdir -p "/orgs/ord-orgs/${ORG_NAME}/nodes/orderer0.${ORG_DOMAIN}/msp/tlscacerts"
-cp "/orgs/ord-orgs/${ORG_NAME}/nodes/orderer0.${ORG_DOMAIN}/tls/tlscacerts/"* \
-   "/orgs/ord-orgs/${ORG_NAME}/nodes/orderer0.${ORG_DOMAIN}/msp/tlscacerts/tlsca.${ORG_DOMAIN}-cert.pem"
+mkdir -p "/orgs/ord-orgs/${ORG_NAME}/nodes/ord0.${ORG_DOMAIN}/msp/tlscacerts"
+cp "/orgs/ord-orgs/${ORG_NAME}/nodes/ord0.${ORG_DOMAIN}/tls/tlscacerts/"* \
+   "/orgs/ord-orgs/${ORG_NAME}/nodes/ord0.${ORG_DOMAIN}/msp/tlscacerts/tlsca.${ORG_DOMAIN}-cert.pem"
 
 mkdir -p "/orgs/ord-orgs/${ORG_NAME}/msp/tlscacerts"
-cp "/orgs/ord-orgs/${ORG_NAME}/nodes/orderer0.${ORG_DOMAIN}/tls/tlscacerts/"* \
+cp "/orgs/ord-orgs/${ORG_NAME}/nodes/ord0.${ORG_DOMAIN}/tls/tlscacerts/"* \
    "/orgs/ord-orgs/${ORG_NAME}/msp/tlscacerts/tlsca.${ORG_DOMAIN}-cert.pem"
 
 # TODO -> is necessary?

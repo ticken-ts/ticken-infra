@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-    name: orderer
+    name: ${ORG_NAME}-ord-node0
 spec:
     selector:
         matchLabels:
-            name: ${ORG_NAME}-node
+            name: ${ORG_NAME}-ord-node0
     replicas: 1
     template:
         metadata:
             labels:
-                name: ${ORG_NAME}-node
+                name: ${ORG_NAME}-ord-node0
         spec:
            volumes:
              - name: fabricfiles
@@ -22,9 +22,9 @@ spec:
                imagePullPolicy: IfNotPresent
                env:
                 - name: CONFIGTX_ORDERER_ADDRESSES
-                  value: "${ORG_DOMAIN}:7050"
+                  value: ${ORG_DOMAIN}:7050
                 - name: ORDERER_GENERAL_LISTENADDRESS
-                  value: "0.0.0.0"
+                  value: 0.0.0.0
                 - name: ORDERER_GENERAL_LISTENPORT
                   value: "7050"
                 - name: ORDERER_GENERAL_LOGLEVEL

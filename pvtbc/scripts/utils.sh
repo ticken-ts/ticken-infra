@@ -15,10 +15,19 @@ function kube_apply_template() {
   cat $1 | envsubst | kubectl -n $2 apply -f -
 }
 
+function kube_show_template() {
+  cat $1 | envsubst
+}
+
 function kube_wait_until_pod_running() {
   cat $1 | envsubst | kubectl -n $2 wait --for=condition=Available=True -f -
 }
 
 function kube_wait_until_job_completed() {
   cat $1 | envsubst | kubectl -n $2 wait --for=condition=complete -f -
+}
+
+
+function to_lower() {
+  ${$1,,}
 }

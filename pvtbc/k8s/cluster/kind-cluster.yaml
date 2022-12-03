@@ -3,5 +3,5 @@ kind: Cluster
 nodes:
   - role: control-plane
     extraMounts:
-      - hostPath: /home/bill/work/www
-        containerPath: /www
+      - hostPath: /tmp/ticken-pv
+        containerPath: /ticken-pv

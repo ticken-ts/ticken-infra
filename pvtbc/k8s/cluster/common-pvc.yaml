@@ -3,9 +3,9 @@ kind: PersistentVolumeClaim
 metadata:
   name: common-pvc
 spec:
-  storageClassName: standard
+  volumeName: ticken-pv
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 100Mi
+      storage: 200Mi
