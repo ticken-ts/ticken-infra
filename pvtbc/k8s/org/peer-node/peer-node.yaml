@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ${ORG_NAME}-peer-node0
+  name: ${ORG_NAME}-peer0
 spec:
   selector:
     matchLabels:
-      name: ${ORG_NAME}-peer-node0
+      name: ${ORG_NAME}-peer0
   replicas: 1
   template:
     metadata:
       labels:
-        name: ${ORG_NAME}-peer-node0
+        name: ${ORG_NAME}-peer0
     spec:
       volumes:
         - name: fabricfiles
@@ -51,19 +51,19 @@ spec:
             - name: CORE_PEER_ADDRESSAUTODETECT
               value: "true"
             - name: CORE_PEER_ID
-              value: peer0-${ORG_NAME}
+              value: ${ORG_NAME}-peer0
             - name: CORE_PEER_ADDRESS
-              value: ${ORD_DOMAIN}:7051
+              value: ${ORG_NAME}-peer0:7051
             - name: CORE_PEER_LISTENADDRESS
               value: 0.0.0.0:7051
             - name: CORE_PEER_EVENTS_ADDRESS
               value: 0.0.0.0:7061
             - name: CORE_PEER_GOSSIP_BOOTSTRAP
-              value: ${ORD_DOMAIN}:7051
+              value: ${ORG_NAME}-peer0:7051
             - name: CORE_PEER_GOSSIP_ENDPOINT
-              value: ${ORD_DOMAIN}:7051
+              value: ${ORG_NAME}-peer0:7051
             - name: CORE_PEER_GOSSIP_EXTERNALENDPOINT
-              value: ${ORD_DOMAIN}:7051
+              value: ${ORG_NAME}-peer0:7051
             - name: CORE_PEER_GOSSIP_ORGLEADER
               value: "false"
             - name: CORE_PEER_GOSSIP_USELEADERELECTION
@@ -95,14 +95,14 @@ spec:
             - name: FABRIC_CFG_PATH
               value: /etc/hyperledger/fabric
             - name: CORE_OPERATIONS_LISTENADDRESS
-              value: 0.0.0.0:9443
+              value: 0.0.0.0:8443
             - name: CORE_METRICS_PROVIDER
               value: prometheus
           ports:
             - containerPort: 7051
             - containerPort: 7052
             - containerPort: 7053
-            - containerPort: 9443
+            - containerPort: 8443
           resources:
             limits:
               memory: "300Mi"

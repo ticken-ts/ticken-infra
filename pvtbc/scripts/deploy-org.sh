@@ -56,7 +56,7 @@ function deploy_peer_node() {
 
   local k8_namespace=$3
 
-  #kube_apply_template "$PEER_NODES_TEMPLATE_PATH/peer-configmap.yaml" $k8_namespace
+  kube_apply_template "$PEER_NODES_TEMPLATE_PATH/peer-configmap.yaml" $k8_namespace
   kube_apply_template "$PEER_NODES_TEMPLATE_PATH/peer-node.yaml" $k8_namespace
   kube_apply_template "$PEER_NODES_TEMPLATE_PATH/peer-node-cli.yaml" $k8_namespace
   kube_apply_template "$PEER_NODES_TEMPLATE_PATH/peer-node-service.yaml" $k8_namespace

@@ -33,9 +33,9 @@ spec:
             - name: ORDERER_CA
               value: /orgs/ord-orgs/${ORG_NAME}/msp/tlscacerts/tlsca.${ORD_DOMAIN}-cert.pem
             - name: CORE_PEER_ADDRESS
-              value: ${ORG_DOMAIN}:7051
+              value: ${ORG_NAME}-peer0:7051
             - name: CORE_PEER_ID
-              value: cli.peer0-${ORG_NAME}
+              value: cli-peer0-${ORG_NAME}
             - name: CORE_PEER_LOCALMSPID
               value: ${ORG_MSP}
             - name: CORE_PEER_MSPCONFIGPATH

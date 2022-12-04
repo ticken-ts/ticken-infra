@@ -39,8 +39,8 @@ fabric-ca-client register \
 
 fabric-ca-client register \
   --caname ca-${ORG_NAME} \
-  --id.name ordererAdmin \
-  --id.secret ordererAdminpw \
+  --id.name ${ORG_NAME}-admin \
+  --id.secret ${ORG_NAME}-adminpw \
   --id.type admin \
   --tls.certfiles "/orgs/fabric-ca/${ORG_NAME}/tls-cert.pem"
 
@@ -53,6 +53,7 @@ fabric-ca-client enroll \
   --csr.hosts ord0.${ORG_DOMAIN} \
   --csr.hosts localhost \
   --csr.hosts ca-${ORG_DOMAIN} \
+  --csr.hosts ${ORG_NAME}-ord0 \
   --tls.certfiles "/orgs/fabric-ca/${ORG_NAME}/tls-cert.pem"
 
 cp "/orgs/ord-orgs/${ORG_NAME}/msp/config.yaml" \
@@ -66,6 +67,7 @@ fabric-ca-client enroll \
   --csr.hosts ord0.${ORG_DOMAIN} \
   --csr.hosts localhost \
   --csr.hosts ca-${ORG_NAME} \
+  --csr.hosts ${ORG_NAME}-ord0 \
   --tls.certfiles "/orgs/fabric-ca/${ORG_NAME}/tls-cert.pem"
 
 cp "/orgs/ord-orgs/${ORG_NAME}/nodes/ord0.${ORG_DOMAIN}/tls/tlscacerts/"* \
@@ -85,6 +87,12 @@ mkdir -p "/orgs/ord-orgs/${ORG_NAME}/msp/tlscacerts"
 cp "/orgs/ord-orgs/${ORG_NAME}/nodes/ord0.${ORG_DOMAIN}/tls/tlscacerts/"* \
    "/orgs/ord-orgs/${ORG_NAME}/msp/tlscacerts/tlsca.${ORG_DOMAIN}-cert.pem"
 
-# TODO -> is necessary?
-mkdir -p "orgs/ord-orgs/${ORG_NAME}/users"
-mkdir -p "orgs/ord-orgs/${ORG_NAME}/users/Admin@example.com"
+
+fabric-ca-client enroll \
+  -u https://${ORG_NAME}-admin:${ORG_NAME}-adminpw@ca-${ORG_NAME}:7054 \
+  --caname ca-${ORG_NAME} \
+  -M "/orgs/ord-orgs/${ORG_NAME}/users/Admin@${ORG_DOMAIN}/msp" \
+  --tls.certfiles "/orgs/fabric-ca/${ORG_NAME}/tls-cert.pem"
+
+cp "/orgs/ord-orgs/${ORG_NAME}/msp/config.yaml" \
+   "/orgs/ord-orgs/${ORG_NAME}/users/Admin@${ORG_DOMAIN}/msp/config.yaml"

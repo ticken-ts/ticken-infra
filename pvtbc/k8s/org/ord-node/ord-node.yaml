@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-    name: ${ORG_NAME}-ord-node0
+    name: ${ORG_NAME}-ord0
 spec:
     selector:
         matchLabels:
-            name: ${ORG_NAME}-ord-node0
+            name: ${ORG_NAME}-ord0
     replicas: 1
     template:
         metadata:
             labels:
-                name: ${ORG_NAME}-ord-node0
+                name: ${ORG_NAME}-ord0
         spec:
            volumes:
              - name: fabricfiles
@@ -22,7 +22,7 @@ spec:
                imagePullPolicy: IfNotPresent
                env:
                 - name: CONFIGTX_ORDERER_ADDRESSES
-                  value: ${ORG_DOMAIN}:7050
+                  value: ${ORG_NAME}-ord0:7050
                 - name: ORDERER_GENERAL_LISTENADDRESS
                   value: 0.0.0.0
                 - name: ORDERER_GENERAL_LISTENPORT
@@ -33,10 +33,8 @@ spec:
                   value: /orgs/ord-orgs/${ORG_NAME}/nodes/ord0.${ORG_DOMAIN}/msp
                 - name: ORDERER_GENERAL_LOCALMSPID
                   value: OrdererMSP
-                - name: ORDERER_GENERAL_GENESISMETHOD
-                  value: file
-                - name: ORDERER_GENERAL_GENESISFILE
-                  value: /system-genesis-block/genesis.block
+                - name: ORDERER_GENERAL_BOOTSTRAPMETHOD
+                  value: none
                 - name: ORDERER_GENERAL_TLS_ENABLED
                   value: "true"
                 - name: ORDERER_GENERAL_TLS_PRIVATEKEY
@@ -49,7 +47,34 @@ spec:
                   value: /orgs/ord-orgs/${ORG_NAME}/nodes/ord0.${ORG_DOMAIN}/tls/server.key
                 - name:  ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE
                   value: /orgs/ord-orgs/${ORG_NAME}/nodes/ord0.${ORG_DOMAIN}/tls/server.crt
-               
+
+                - name: ORDERER_CONSENSUS_WALDIR
+                  value: /var/hyperledger/fabric/data/orderer3/etcdraft/wal
+                - name: ORDERER_CONSENSUS_SNAPDIR
+                  value: /var/hyperledger/fabric/data/orderer3/etcdraft/wal
+
+                - name: ORDERER_CHANNELPARTICIPATION_ENABLED
+                  value: "true"
+                - name: ORDERER_MAXREQUESTBODYSIZE
+                  value: "1 MB"
+
+                - name: ORDERER_ADMIN_TLS_ENABLED
+                  value: "true"
+                - name: ORDERER_ADMIN_TLS_CERTIFICATE
+                  value: /orgs/ord-orgs/${ORG_NAME}/nodes/ord0.${ORG_DOMAIN}/tls/server.crt
+                - name: ORDERER_ADMIN_TLS_ROOTCAS
+                  value: /orgs/ord-orgs/${ORG_NAME}/nodes/ord0.${ORG_DOMAIN}/tls/ca.crt
+                - name: ORDERER_ADMIN_TLS_PRIVATEKEY
+                  value: /orgs/ord-orgs/${ORG_NAME}/nodes/ord0.${ORG_DOMAIN}/tls/server.key
+
+                - name: ORDERER_ADMIN_TLS_CLIENTROOTCAS
+                  value: /orgs/ord-orgs/${ORG_NAME}/nodes/ord0.${ORG_DOMAIN}/tls/ca.crt
+
+                - name: ORDERER_OPERATIONS_LISTENADDRESS
+                  value: 0.0.0.0:8443
+                - name: ORDERER_ADMIN_LISTENADDRESS
+                  value: 0.0.0.0:9443
+
                resources:
                  limits:
                     memory: "250Mi"

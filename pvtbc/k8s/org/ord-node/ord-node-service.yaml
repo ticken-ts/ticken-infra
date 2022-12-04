@@ -1,12 +1,12 @@
 kind: Service
 apiVersion: v1
 metadata:
-    name: ${ORG_NAME}-ord-node0
+    name: ${ORG_NAME}-ord0
     labels:
-        run: ${ORG_NAME}-ord-node0
+        run: ${ORG_NAME}-ord0
 spec:
     selector:
-        name: ${ORG_NAME}-ord-node0
+        name: ${ORG_NAME}-ord0
     type: ClusterIP
     ports:
         - protocol: TCP
@@ -15,4 +15,8 @@ spec:
 
         - protocol: TCP
           port: 9443
-          name: metrics 
+          name: admin
+
+        - protocol: TCP
+          port: 8443
+          name: operations

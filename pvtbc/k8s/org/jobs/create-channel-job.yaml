@@ -1,0 +1,47 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-channel-${CHANNEL_NAME}
+spec:
+  parallelism: 1
+  completions: 1
+  template:
+    metadata:
+      name: create-channel-${CHANNEL_NAME}
+    spec:
+      volumes:
+        - name: fabricfiles
+          persistentVolumeClaim:
+            claimName: common-pvc
+      containers:
+        - name: generate-certs
+          image: hyperledger/fabric-tools:2.3
+          workingDir: /
+          resources:
+            requests:
+              memory: "300Mi"
+              cpu: "300m"
+            limits:
+              memory: "500Mi"
+              cpu: "350m"
+          volumeMounts:
+            - mountPath: /orgs
+              name: fabricfiles
+              subPath: orgs
+
+            - mountPath: /scripts
+              name: fabricfiles
+              subPath: scripts
+
+            - mountPath: /configtx
+              name: fabricfiles
+              subPath: configtx
+
+            - mountPath: /channel-artifacts
+              name: fabricfiles
+              subPath: channel-artifacts
+          command:
+            - /bin/sh
+            - -c
+            - ./scripts/create-channel.sh "ticken-channel" "orderer" "orderer.example.com"
+      restartPolicy: Never

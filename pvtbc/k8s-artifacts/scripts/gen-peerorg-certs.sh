@@ -58,7 +58,7 @@ fabric-ca-client enroll \
   --caname ca-${ORG_NAME} \
   -M "/orgs/peer-orgs/${ORG_NAME}/nodes/peer0.${ORG_DOMAIN}/msp" \
   --csr.hosts peer0.${ORG_DOMAIN} \
-  --csr.hosts peer0-${ORG_NAME} \
+  --csr.hosts ${ORG_NAME}-peer0 \
   --tls.certfiles "/orgs/fabric-ca/${ORG_NAME}/tls-cert.pem"
 
 cp "/orgs/peer-orgs/${ORG_NAME}/msp/config.yaml" \
@@ -70,9 +70,9 @@ fabric-ca-client enroll -u \
   -M "/orgs/peer-orgs/${ORG_NAME}/nodes/peer0.${ORG_DOMAIN}/tls" \
   --enrollment.profile tls \
   --csr.hosts peer0.${ORG_DOMAIN} \
-  --csr.hosts peer0-${ORG_NAME} \
   --csr.hosts ca-${ORG_NAME} \
   --csr.hosts localhost \
+  --csr.hosts ${ORG_NAME}-peer0 \
   --tls.certfiles  "/orgs/fabric-ca/${ORG_NAME}/tls-cert.pem"
 
 cp "/orgs/peer-orgs/${ORG_NAME}/nodes/peer0.${ORG_DOMAIN}/tls/tlscacerts/"* \
