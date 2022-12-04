@@ -1,3 +1,5 @@
+. utils.sh
+
 set -x
 
 echo "...Generating certificates for orderer $1..."
@@ -96,3 +98,6 @@ fabric-ca-client enroll \
 
 cp "/orgs/ord-orgs/${ORG_NAME}/msp/config.yaml" \
    "/orgs/ord-orgs/${ORG_NAME}/users/Admin@${ORG_DOMAIN}/msp/config.yaml"
+
+rename_priv_keys "/orgs/ord-org" "priv.pem"
+rename_priv_keys "/orgs/peer-org" "priv.pem"
