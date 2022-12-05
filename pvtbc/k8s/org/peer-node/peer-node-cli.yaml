@@ -31,7 +31,7 @@ spec:
           workingDir: /
           env:
             - name: ORDERER_CA
-              value: /orgs/ord-orgs/${ORG_NAME}/msp/tlscacerts/tlsca.${ORD_DOMAIN}-cert.pem
+              value: /orgs/ord-orgs/${ORD_NAME}/msp/tlscacerts/tlsca.${ORD_DOMAIN}-cert.pem
             - name: CORE_PEER_ADDRESS
               value: ${ORG_NAME}-peer0:7051
             - name: CORE_PEER_ID

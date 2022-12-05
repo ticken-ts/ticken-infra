@@ -37,7 +37,6 @@ function initialize_org() {
 
 function deploy_ord_node() {
   export ORG_NAME=$1
-  export ORG_MSP="OrdererMSP"
   export ORG_DOMAIN="$ORG_NAME.example.com"
   local k8_namespace=$2
 
@@ -49,8 +48,6 @@ function deploy_ord_node() {
 function deploy_peer_node() {
   export ORG_NAME=$1
   export ORD_NAME=$2
-
-  export ORG_MSP="TickenMSP"
   export ORG_DOMAIN="$ORG_NAME.example.com"
   export ORD_DOMAIN="$ORD_NAME.example.com"
 

@@ -32,7 +32,7 @@ spec:
                 - name: ORDERER_GENERAL_LOCALMSPDIR
                   value: /orgs/ord-orgs/${ORG_NAME}/nodes/ord0.${ORG_DOMAIN}/msp
                 - name: ORDERER_GENERAL_LOCALMSPID
-                  value: OrdererMSP
+                  value: ${ORG_NAME}MSP
                 - name: ORDERER_GENERAL_BOOTSTRAPMETHOD
                   value: none
                 - name: ORDERER_GENERAL_TLS_ENABLED

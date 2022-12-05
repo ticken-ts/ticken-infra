@@ -12,3 +12,5 @@ function rename_priv_keys()  {
       mv -v "$file" "$filepath/${pk_filename}"
   done
 }
+
+rename_priv_keys $1 $2

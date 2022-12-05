@@ -22,7 +22,7 @@ Organizations:
         Name: orderer
 
         # ID to load the MSP definition as
-        ID: OrdererMSP
+        ID: ordererMSP
 
         # MSPDir is the filesystem path which contains the MSP configuration
         MSPDir: /orgs/ord-orgs/orderer/msp
@@ -33,16 +33,16 @@ Organizations:
         Policies:
             Readers:
                 Type: Signature
-                Rule: "OR('OrdererMSP.member')"
+                Rule: "OR('ordererMSP.member')"
             Writers:
                 Type: Signature
-                Rule: "OR('OrdererMSP.member')"
+                Rule: "OR('ordererMSP.member')"
             Admins:
                 Type: Signature
-                Rule: "OR('OrdererMSP.admin')"
+                Rule: "OR('ordererMSP.admin')"
             Endorsement:
                 Type: Signature
-                Rule: "OR('OrdererMSP.member')"
+                Rule: "OR('ordererMSP.member')"
 
         OrdererEndpoints:
             - orderer-ord0:7050
@@ -53,7 +53,7 @@ Organizations:
         Name: ticken
 
         # ID to load the MSP definition as
-        ID: TickenMSP
+        ID: tickenMSP
 
         MSPDir: /orgs/peer-orgs/ticken/msp
 
@@ -63,16 +63,16 @@ Organizations:
         Policies:
             Readers:
                 Type: Signature
-                Rule: "OR('Org1MSP.member')"
+                Rule: "OR('tickenMSP.member')"
             Writers:
                 Type: Signature
-                Rule: "OR('Org1MSP.member')"
+                Rule: "OR('tickenMSP.member')"
             Admins:
                 Type: Signature
-                Rule: "OR('Org1MSP.admin')"
+                Rule: "OR('tickenMSP.admin')"
             Endorsement:
                 Type: Signature
-                Rule: "OR('Org1MSP.peer')"
+                Rule: "OR('tickenMSP.peer')"
 
         # leave this flag set to true.
         AnchorPeers:
@@ -164,7 +164,7 @@ Application: &ApplicationDefaults
             Rule: "ANY Writers"
         Admins:
             Type: Signature
-            Rule: "OR('Org1MSP.admin')"
+            Rule: "OR('tickenMSP.admin')"
         LifecycleEndorsement:
             Type: ImplicitMeta
             Rule: "MAJORITY Endorsement"
