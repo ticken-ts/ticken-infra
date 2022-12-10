@@ -1,15 +1,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ${ORG_NAME}-peer0-cli
+  name: ${ORG_NAME}-${ORG_NODE}-cli
 spec:
   selector:
     matchLabels:
-      name: ${ORG_NAME}-peer0-cli
+      name: ${ORG_NAME}-${ORG_NODE}-cli
   template:
     metadata:
       labels:
-        name: ${ORG_NAME}-peer0-cli
+        name: ${ORG_NAME}-${ORG_NODE}-cli
     spec:
       volumes:
         - name: fabricfiles
@@ -17,7 +17,7 @@ spec:
             claimName: common-pvc
 
       containers:
-        - name: ${ORG_NAME}-peer0-cli
+        - name: ${ORG_NAME}-${ORG_NODE}-cli
           stdin: true
           tty: true
           resources:
@@ -33,21 +33,21 @@ spec:
             - name: ORDERER_CA
               value: /orgs/ord-orgs/${ORD_NAME}/msp/tlscacerts/tlsca.${ORD_DOMAIN}-cert.pem
             - name: CORE_PEER_ADDRESS
-              value: ${ORG_NAME}-peer0:7051
+              value: ${ORG_NAME}-${ORG_NODE}:7051
             - name: CORE_PEER_ID
               value: cli-peer0-${ORG_NAME}
             - name: CORE_PEER_LOCALMSPID
-              value: ${ORG_MSP}
+              value: ${ORG_NAME}MSP
             - name: CORE_PEER_MSPCONFIGPATH
               value: /orgs/peer-orgs/${ORG_NAME}/users/Admin@${ORG_DOMAIN}/msp
             - name: CORE_PEER_TLS_CERT_FILE
-              value: /orgs/peer-orgs/${ORG_NAME}/nodes/peer0.${ORG_DOMAIN}/tls/server.crt
+              value: /orgs/peer-orgs/${ORG_NAME}/nodes/${ORG_NODE}.${ORG_DOMAIN}/tls/server.crt
             - name: CORE_PEER_TLS_ENABLED
               value: "true"
             - name: CORE_PEER_TLS_KEY_FILE
-              value: /orgs/peer-orgs/${ORG_NAME}/nodes/peer0.${ORG_DOMAIN}/tls/server.key
+              value: /orgs/peer-orgs/${ORG_NAME}/nodes/${ORG_NODE}.${ORG_DOMAIN}/tls/server.key
             - name: CORE_PEER_TLS_ROOTCERT_FILE
-              value: /orgs/peer-orgs/${ORG_NAME}/nodes/peer0.${ORG_DOMAIN}/tls/ca.crt
+              value: /orgs/peer-orgs/${ORG_NAME}/nodes/${ORG_NODE}.${ORG_DOMAIN}/tls/ca.crt
             - name: GOPATH
               value: /opt/gopath
             - name: SYS_CHANNEL

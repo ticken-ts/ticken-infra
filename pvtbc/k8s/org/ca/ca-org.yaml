@@ -23,7 +23,7 @@ spec:
           command:
             [
               "fabric-ca-server" ,
-              "start", "-b" ,"admin:adminpw","--port", "7054", "-d"
+              "start", "-b" ,"${CA_ADMIN_USERNAME}:${CA_ADMIN_PASSWORD}","--port", "7054", "-d"
             ]
           resources:
             requests:

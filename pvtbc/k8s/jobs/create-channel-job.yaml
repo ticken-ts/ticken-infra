@@ -43,5 +43,5 @@ spec:
           command:
             - /bin/sh
             - -c
-            - ./scripts/create-channel.sh ${CHANNEL_NAME} ${ORDERER_NAME} ${ORDERER_DOMAIN}
+            - ./scripts/create-channel.sh ${CHANNEL_NAME} ${ORDERER_ORG_NAME} ${ORDERER_ORG_DOMAIN}
       restartPolicy: Never

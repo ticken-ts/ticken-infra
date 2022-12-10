@@ -1,12 +1,12 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: ${ORG_NAME}-peer0
+  name: ${ORG_NAME}-${ORG_NODE}
   labels:
-    app: ${ORG_NAME}-peer0
+    app: ${ORG_NAME}-${ORG_NODE}
 spec:
   selector:
-    name: ${ORG_NAME}-peer0
+    name: ${ORG_NAME}-${ORG_NODE}
   type: ClusterIP
   ports:
     - name: grpc
@@ -25,9 +25,9 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: ${ORG_NAME}-peer0
+    app: ${ORG_NAME}-${ORG_NODE}
     metrics-service: "true"
-  name: ${ORG_NAME}-peer0-metrics
+  name: ${ORG_NAME}-${ORG_NODE}-metrics
 spec:
   type: ClusterIP
   ports:
@@ -35,4 +35,4 @@ spec:
     port: 8443
     targetPort: 8443
   selector:
-    name: ${ORG_NAME}-peer0
+    name: ${ORG_NAME}-${ORG_NODE}

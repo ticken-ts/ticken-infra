@@ -1,13 +1,13 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: join-channel-${CHANNEL_NAME}-${ORG_NAME}
+  name: join-channel-${CHANNEL_NAME}-${JOINING_ORG_NAME}
 spec:
   parallelism: 1
   completions: 1
   template:
     metadata:
-      name: join-channel-${CHANNEL_NAME}-${ORG_NAME}
+      name: join-channel-${CHANNEL_NAME}-${JOINING_ORG_NAME}
     spec:
       volumes:
         - name: fabricfiles
@@ -43,5 +43,5 @@ spec:
           command:
             - /bin/sh
             - -c
-            - ./scripts/peer-join-channel.sh ${CHANNEL_NAME} ${ORG_NAME} ${ORG_DOMAIN} ${ORDERER_NAME} ${ORDERER_DOMAIN}
+            - ./scripts/peer-join-channel.sh ${CHANNEL_NAME} ${JOINING_ORG_NODE} ${JOINING_ORG_NAME} ${JOINING_ORG_DOMAIN} ${ORDERER_ORG_NAME} ${ORDERER_ORG_DOMAIN}
       restartPolicy: Never

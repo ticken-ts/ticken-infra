@@ -7,9 +7,6 @@ export CHANNEL_NAME=$1
 export ORDERER_ORG_NAME=$2
 export ORDERER_ORG_DOMAIN=$3
 
-export GENESIS_ORG_NAME="ticken"
-export GENESIS_ORG_DOMAIN="ticken.example.com"
-
 generate channel genesis block
 configtxgen \
   -profile TickenNetworkGenesis \

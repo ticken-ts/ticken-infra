@@ -34,5 +34,6 @@ spec:
           command:
             - /bin/sh
             - -c
-            - ./scripts/gen-ord-certs.sh "${ORG_NAME}"
+            - |
+              ./scripts/gen-peer-org-certs.sh ${ORG_NAME} ${ORG_DOMAIN} ${CA_ADMIN_USERNAME} ${CA_ADMIN_PASSWORD}
       restartPolicy: Never

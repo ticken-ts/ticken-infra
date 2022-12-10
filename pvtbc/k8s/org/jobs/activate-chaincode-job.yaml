@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: generate-certs-${ORG_NAME}
+  name: activate-chaincode-${CHAINCODE_NAME}-${ORG_NAME}
 spec:
   parallelism: 1
   completions: 1
@@ -35,5 +35,5 @@ spec:
             - /bin/sh
             - -c
             - |
-              ./scripts/gen-ord-org-certs.sh ${ORG_NAME} ${ORG_DOMAIN} ${CA_ADMIN_USERNAME} ${CA_ADMIN_PASSWORD}
+              ./scripts/activate-chaincode.sh ${ORG_NAME} ${ORG_NODE} ${ORG_DOMAIN} ${CHANNEL_NAME} ${CHAINCODE_ID} ${CHAINCODE_NAME} ${ORDERER_ORG_NAME} ${ORDERER_ORG_DOMAIN}
       restartPolicy: Never
