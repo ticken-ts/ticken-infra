@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${ORG_NAME}-${CHAINCODE_NAME}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ${ORG_NAME}-${CHAINCODE_NAME}
+  template:
+    metadata:
+      labels:
+        app: ${ORG_NAME}-${CHAINCODE_NAME}
+    spec:
+      containers:
+        - name: main
+          image: ${CHAINCODE_IMAGE}
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: CHAINCODE_SERVER_ADDRESS
+              value: 0.0.0.0:9999
+            - name: CHAINCODE_ID
+              value: ${CHAINCODE_ID}
+            - name: CORE_CHAINCODE_ID_NAME
+              value: ${CHAINCODE_ID}
+          ports:
+            - containerPort: 9999
