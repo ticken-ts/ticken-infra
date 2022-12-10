@@ -34,13 +34,13 @@ function bootstrap() {
     join_channel $TICKEN_CHANNEL_NAME $GENESIS_ORG_NAME
     echo "*** Channel joined ***"
 
-#    echo "*** Deploying contracts in org: $GENESIS_ORG_NAME ***"
-#    deploy_chaincode \
-#      $GENESIS_ORG_NAME $GENESIS_ORG_DOMAIN $CHANNEL_NAME \
-#      $TICKEN_EVENT_CHAINCODE_NAME $TICKEN_EVENT_CHAINCODE_PATH \
-#      $ORDERER_ORG_NAME $ORDERER_ORG_DOMAIN \
-#      $K8_NAMESPACE
-##
+    echo "*** Deploying contracts in org: $GENESIS_ORG_NAME ***"
+    deploy_chaincode \
+      $GENESIS_ORG_NAME $GENESIS_ORG_DOMAIN $CHANNEL_NAME \
+      $TICKEN_EVENT_CHAINCODE_NAME $TICKEN_EVENT_CHAINCODE_PATH \
+      $ORDERER_ORG_NAME $ORDERER_ORG_DOMAIN \
+      $K8_NAMESPACE
+#
 #    deploy_chaincode \
 #      $GENESIS_ORG_NAME $GENESIS_ORG_DOMAIN $CHANNEL_NAME \
 #      $TICKEN_TICKEN_TICKET_CHAINCODE_NAME $TICKEN_TICKEN_TICKET_CHAINCODE_PATH \

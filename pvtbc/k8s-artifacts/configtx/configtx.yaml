@@ -200,8 +200,8 @@ Orderer: &OrdererDefaults
         Consenters:
         - Host: orderer-ord0
           Port: 7050
-          ClientTLSCert: /orgs/ord-orgs/orderer/nodes/ord0.orderer.example.com/tls/server.crt
-          ServerTLSCert: /orgs/ord-orgs/orderer/nodes/ord0.orderer.example.com/tls/server.crt
+          ClientTLSCert: /orgs/ord-orgs/orderer/nodes/ord0.orderer/tls/server.crt
+          ServerTLSCert: /orgs/ord-orgs/orderer/nodes/ord0.orderer/tls/server.crt
 
     # Batch Timeout: The amount of time to wait before creating a batch
     BatchTimeout: 2s

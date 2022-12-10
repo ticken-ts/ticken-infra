@@ -39,15 +39,15 @@ spec:
             - name: CORE_PEER_LOCALMSPID
               value: ${ORG_NAME}MSP
             - name: CORE_PEER_MSPCONFIGPATH
-              value: /orgs/peer-orgs/${ORG_NAME}/users/Admin@${ORG_DOMAIN}/msp
+              value: /orgs/peer-orgs/${ORG_NAME}/users/Admin@${ORG_NAME}/msp
             - name: CORE_PEER_TLS_CERT_FILE
-              value: /orgs/peer-orgs/${ORG_NAME}/nodes/${ORG_NODE}.${ORG_DOMAIN}/tls/server.crt
+              value: /orgs/peer-orgs/${ORG_NAME}/nodes/${ORG_NODE}.${ORG_NAME}/tls/server.crt
             - name: CORE_PEER_TLS_ENABLED
               value: "true"
             - name: CORE_PEER_TLS_KEY_FILE
-              value: /orgs/peer-orgs/${ORG_NAME}/nodes/${ORG_NODE}.${ORG_DOMAIN}/tls/server.key
+              value: /orgs/peer-orgs/${ORG_NAME}/nodes/${ORG_NODE}.${ORG_NAME}/tls/server.key
             - name: CORE_PEER_TLS_ROOTCERT_FILE
-              value: /orgs/peer-orgs/${ORG_NAME}/nodes/${ORG_NODE}.${ORG_DOMAIN}/tls/ca.crt
+              value: /orgs/peer-orgs/${ORG_NAME}/nodes/${ORG_NODE}.${ORG_NAME}/tls/ca.crt
             - name: GOPATH
               value: /opt/gopath
             - name: SYS_CHANNEL

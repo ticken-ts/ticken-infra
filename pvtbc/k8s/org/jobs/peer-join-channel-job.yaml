@@ -43,5 +43,5 @@ spec:
           command:
             - /bin/sh
             - -c
-            - ./scripts/peer-join-channel.sh ${CHANNEL_NAME} ${JOINING_ORG_NODE} ${JOINING_ORG_NAME} ${JOINING_ORG_DOMAIN} ${ORDERER_ORG_NAME} ${ORDERER_ORG_DOMAIN}
+            - ./scripts/peer-join-channel.sh ${CHANNEL_NAME} ${JOINING_ORG_NODE} ${JOINING_ORG_NAME} ${ORDERER_ORG_NAME}
       restartPolicy: Never

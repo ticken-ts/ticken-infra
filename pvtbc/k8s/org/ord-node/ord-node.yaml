@@ -30,7 +30,7 @@ spec:
                 - name: ORDERER_GENERAL_LOGLEVEL
                   value: debug
                 - name: ORDERER_GENERAL_LOCALMSPDIR
-                  value: /orgs/ord-orgs/${ORG_NAME}/nodes/${ORG_NODE}.${ORG_DOMAIN}/msp
+                  value: /orgs/ord-orgs/${ORG_NAME}/nodes/${ORG_NODE}.${ORG_NAME}/msp
                 - name: ORDERER_GENERAL_LOCALMSPID
                   value: ${ORG_NAME}MSP
                 - name: ORDERER_GENERAL_BOOTSTRAPMETHOD
@@ -38,15 +38,15 @@ spec:
                 - name: ORDERER_GENERAL_TLS_ENABLED
                   value: "true"
                 - name: ORDERER_GENERAL_TLS_PRIVATEKEY
-                  value: /orgs/ord-orgs/${ORG_NAME}/nodes/${ORG_NODE}.${ORG_DOMAIN}/tls/server.key
+                  value: /orgs/ord-orgs/${ORG_NAME}/nodes/${ORG_NODE}.${ORG_NAME}/tls/server.key
                 - name: ORDERER_GENERAL_TLS_CERTIFICATE
-                  value: /orgs/ord-orgs/${ORG_NAME}/nodes/${ORG_NODE}.${ORG_DOMAIN}/tls/server.crt
+                  value: /orgs/ord-orgs/${ORG_NAME}/nodes/${ORG_NODE}.${ORG_NAME}/tls/server.crt
                 - name: ORDERER_GENERAL_TLS_ROOTCAS
-                  value: /orgs/ord-orgs/${ORG_NAME}/nodes/${ORG_NODE}.${ORG_DOMAIN}/tls/ca.crt
+                  value: /orgs/ord-orgs/${ORG_NAME}/nodes/${ORG_NODE}.${ORG_NAME}/tls/ca.crt
                 - name:  ORDERER_GENERAL_CLUSTER_CLIENTPRIVATEKEY
-                  value: /orgs/ord-orgs/${ORG_NAME}/nodes/${ORG_NODE}.${ORG_DOMAIN}/tls/server.key
+                  value: /orgs/ord-orgs/${ORG_NAME}/nodes/${ORG_NODE}.${ORG_NAME}/tls/server.key
                 - name:  ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE
-                  value: /orgs/ord-orgs/${ORG_NAME}/nodes/${ORG_NODE}.${ORG_DOMAIN}/tls/server.crt
+                  value: /orgs/ord-orgs/${ORG_NAME}/nodes/${ORG_NODE}.${ORG_NAME}/tls/server.crt
 
                 - name: ORDERER_CONSENSUS_WALDIR
                   value: /var/hyperledger/fabric/data/orderer3/etcdraft/wal
@@ -61,14 +61,14 @@ spec:
                 - name: ORDERER_ADMIN_TLS_ENABLED
                   value: "true"
                 - name: ORDERER_ADMIN_TLS_CERTIFICATE
-                  value: /orgs/ord-orgs/${ORG_NAME}/nodes/${ORG_NODE}.${ORG_DOMAIN}/tls/server.crt
+                  value: /orgs/ord-orgs/${ORG_NAME}/nodes/${ORG_NODE}.${ORG_NAME}/tls/server.crt
                 - name: ORDERER_ADMIN_TLS_ROOTCAS
-                  value: /orgs/ord-orgs/${ORG_NAME}/nodes/${ORG_NODE}.${ORG_DOMAIN}/tls/ca.crt
+                  value: /orgs/ord-orgs/${ORG_NAME}/nodes/${ORG_NODE}.${ORG_NAME}/tls/ca.crt
                 - name: ORDERER_ADMIN_TLS_PRIVATEKEY
-                  value: /orgs/ord-orgs/${ORG_NAME}/nodes/${ORG_NODE}.${ORG_DOMAIN}/tls/server.key
+                  value: /orgs/ord-orgs/${ORG_NAME}/nodes/${ORG_NODE}.${ORG_NAME}/tls/server.key
 
                 - name: ORDERER_ADMIN_TLS_CLIENTROOTCAS
-                  value: /orgs/ord-orgs/${ORG_NAME}/nodes/${ORG_NODE}.${ORG_DOMAIN}/tls/ca.crt
+                  value: /orgs/ord-orgs/${ORG_NAME}/nodes/${ORG_NODE}.${ORG_NAME}/tls/ca.crt
 
                 - name: ORDERER_OPERATIONS_LISTENADDRESS
                   value: 0.0.0.0:8443

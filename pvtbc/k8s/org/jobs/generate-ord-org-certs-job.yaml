@@ -35,5 +35,5 @@ spec:
             - /bin/sh
             - -c
             - |
-              ./scripts/gen-ord-org-certs.sh ${ORG_NAME} ${ORG_DOMAIN} ${CA_ADMIN_USERNAME} ${CA_ADMIN_PASSWORD}
+              ./scripts/gen-ord-org-certs.sh ${ORG_NAME} ${CA_ADMIN_USERNAME} ${CA_ADMIN_PASSWORD}
       restartPolicy: Never

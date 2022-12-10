@@ -3,13 +3,10 @@ set -x
 echo "...Generating certificates for org $1..."
 
 export ORG_NAME="$1"
-export ORG_DOMAIN="$2"
+export CA_ADMIN_USERNAME=$2
+export CA_ADMIN_PASSWORD=$3
 
-export CA_ADMIN_USERNAME=$3
-export CA_ADMIN_PASSWORD=$4
-
-
-export CA_NAME="ca-${ORG_NAME}"
+CA_NAME="ca-${ORG_NAME}"
 export FABRIC_CA_CLIENT_HOME="/orgs/peer-orgs/${ORG_NAME}/"
 
 mkdir -p $FABRIC_CA_CLIENT_HOME
@@ -60,33 +57,33 @@ fabric-ca-client register \
 fabric-ca-client enroll \
   -u https://peer0:peer0pw@ca-${ORG_NAME}:7054 \
   --caname ca-${ORG_NAME} \
-  -M "/orgs/peer-orgs/${ORG_NAME}/nodes/peer0.${ORG_DOMAIN}/msp" \
-  --csr.hosts peer0.${ORG_DOMAIN} \
+  -M "/orgs/peer-orgs/${ORG_NAME}/nodes/peer0.${ORG_NAME}/msp" \
+  --csr.hosts peer0.${ORG_NAME} \
   --csr.hosts ${ORG_NAME}-peer0 \
   --tls.certfiles "/orgs/fabric-ca/${ORG_NAME}/tls-cert.pem"
 
 cp "/orgs/peer-orgs/${ORG_NAME}/msp/config.yaml" \
-   "/orgs/peer-orgs/${ORG_NAME}/nodes/peer0.${ORG_DOMAIN}/msp/config.yaml"
+   "/orgs/peer-orgs/${ORG_NAME}/nodes/peer0.${ORG_NAME}/msp/config.yaml"
 
 fabric-ca-client enroll -u \
   https://peer0:peer0pw@ca-${ORG_NAME}:7054 \
   --caname ca-${ORG_NAME} \
-  -M "/orgs/peer-orgs/${ORG_NAME}/nodes/peer0.${ORG_DOMAIN}/tls" \
+  -M "/orgs/peer-orgs/${ORG_NAME}/nodes/peer0.${ORG_NAME}/tls" \
   --enrollment.profile tls \
-  --csr.hosts peer0.${ORG_DOMAIN} \
+  --csr.hosts peer0.${ORG_NAME} \
   --csr.hosts ca-${ORG_NAME} \
   --csr.hosts localhost \
   --csr.hosts ${ORG_NAME}-peer0 \
   --tls.certfiles  "/orgs/fabric-ca/${ORG_NAME}/tls-cert.pem"
 
-cp "/orgs/peer-orgs/${ORG_NAME}/nodes/peer0.${ORG_DOMAIN}/tls/tlscacerts/"* \
-   "/orgs/peer-orgs/${ORG_NAME}/nodes/peer0.${ORG_DOMAIN}/tls/ca.crt"
+cp "/orgs/peer-orgs/${ORG_NAME}/nodes/peer0.${ORG_NAME}/tls/tlscacerts/"* \
+   "/orgs/peer-orgs/${ORG_NAME}/nodes/peer0.${ORG_NAME}/tls/ca.crt"
 
-cp "/orgs/peer-orgs/${ORG_NAME}/nodes/peer0.${ORG_DOMAIN}/tls/signcerts/"* \
-   "/orgs/peer-orgs/${ORG_NAME}/nodes/peer0.${ORG_DOMAIN}/tls/server.crt"
+cp "/orgs/peer-orgs/${ORG_NAME}/nodes/peer0.${ORG_NAME}/tls/signcerts/"* \
+   "/orgs/peer-orgs/${ORG_NAME}/nodes/peer0.${ORG_NAME}/tls/server.crt"
 
-cp "/orgs/peer-orgs/${ORG_NAME}/nodes/peer0.${ORG_DOMAIN}/tls/keystore/"* \
-   "/orgs/peer-orgs/${ORG_NAME}/nodes/peer0.${ORG_DOMAIN}/tls/server.key"
+cp "/orgs/peer-orgs/${ORG_NAME}/nodes/peer0.${ORG_NAME}/tls/keystore/"* \
+   "/orgs/peer-orgs/${ORG_NAME}/nodes/peer0.${ORG_NAME}/tls/server.key"
 
 
 
@@ -94,36 +91,36 @@ cp "/orgs/peer-orgs/${ORG_NAME}/nodes/peer0.${ORG_DOMAIN}/tls/keystore/"* \
 
 
 mkdir -p "/orgs/peer-orgs/${ORG_NAME}/msp/tlscacerts"
-cp "/orgs/peer-orgs/${ORG_NAME}/nodes/peer0.${ORG_DOMAIN}/tls/tlscacerts/"* \
+cp "/orgs/peer-orgs/${ORG_NAME}/nodes/peer0.${ORG_NAME}/tls/tlscacerts/"* \
    "/orgs/peer-orgs/${ORG_NAME}/msp/tlscacerts/ca.crt"
 
 mkdir -p "/orgs/peer-orgs/${ORG_NAME}/tlsca"
-cp "/orgs/peer-orgs/${ORG_NAME}/nodes/peer0.${ORG_DOMAIN}/tls/tlscacerts/"* \
-   "/orgs/peer-orgs/${ORG_NAME}/tlsca/tlsca.${ORG_DOMAIN}-cert.pem"
+cp "/orgs/peer-orgs/${ORG_NAME}/nodes/peer0.${ORG_NAME}/tls/tlscacerts/"* \
+   "/orgs/peer-orgs/${ORG_NAME}/tlsca/tlsca.${ORG_NAME}-cert.pem"
 
 mkdir -p "/orgs/peer-orgs/${ORG_NAME}/ca"
-cp "/orgs/peer-orgs/${ORG_NAME}/nodes/peer0.${ORG_DOMAIN}/msp/cacerts/"* \
-   "/orgs/peer-orgs/${ORG_NAME}/ca/ca.${ORG_DOMAIN}-cert.pem"
+cp "/orgs/peer-orgs/${ORG_NAME}/nodes/peer0.${ORG_NAME}/msp/cacerts/"* \
+   "/orgs/peer-orgs/${ORG_NAME}/ca/ca.${ORG_NAME}-cert.pem"
 
 
 fabric-ca-client enroll \
   -u https://user1:user1pw@ca-${ORG_NAME}:7054 \
   --caname ca-${ORG_NAME} \
-  -M "/orgs/peer-orgs/${ORG_NAME}/users/User1@${ORG_DOMAIN}/msp" \
+  -M "/orgs/peer-orgs/${ORG_NAME}/users/User1@${ORG_NAME}/msp" \
   --tls.certfiles "/orgs/fabric-ca/${ORG_NAME}/tls-cert.pem"
 
 cp "/orgs/peer-orgs/${ORG_NAME}/msp/config.yaml" \
-   "/orgs/peer-orgs/${ORG_NAME}/users/User1@${ORG_DOMAIN}/msp/config.yaml"
+   "/orgs/peer-orgs/${ORG_NAME}/users/User1@${ORG_NAME}/msp/config.yaml"
 
 
 
 fabric-ca-client enroll \
   -u https://${ORG_NAME}-admin:${ORG_NAME}-adminpw@ca-${ORG_NAME}:7054 \
   --caname ca-${ORG_NAME} \
-  -M "/orgs/peer-orgs/${ORG_NAME}/users/Admin@${ORG_DOMAIN}/msp" \
+  -M "/orgs/peer-orgs/${ORG_NAME}/users/Admin@${ORG_NAME}/msp" \
   --tls.certfiles "/orgs/fabric-ca/${ORG_NAME}/tls-cert.pem"
 
 cp "/orgs/peer-orgs/${ORG_NAME}/msp/config.yaml" \
-   "/orgs/peer-orgs/${ORG_NAME}/users/Admin@${ORG_DOMAIN}/msp/config.yaml"
+   "/orgs/peer-orgs/${ORG_NAME}/users/Admin@${ORG_NAME}/msp/config.yaml"
 
 { set +x; } 2>/dev/null
