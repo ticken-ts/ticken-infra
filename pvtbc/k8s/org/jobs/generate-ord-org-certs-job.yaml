@@ -34,5 +34,5 @@ spec:
           command:
             - /bin/sh
             - -c
-            - ./scripts/gen-${ORG_TYPE}-certs.sh "${ORG_NAME}"
+            - ./scripts/gen-ord-certs.sh "${ORG_NAME}"
       restartPolicy: Never

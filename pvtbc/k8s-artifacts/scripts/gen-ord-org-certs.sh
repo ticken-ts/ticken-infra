@@ -3,7 +3,11 @@ set -x
 echo "...Generating certificates for orderer $1..."
 
 export ORG_NAME="$1"
-export ORG_DOMAIN="$ORG_NAME.example.com"
+export ORG_DOMAIN="$2"
+
+export CA_ADMIN_USERNAME=$3
+export CA_ADMIN_PASSWORD=$4
+
 
 export CA_NAME="ca-${ORG_NAME}"
 export FABRIC_CA_CLIENT_HOME="/orgs/ord-orgs/${ORG_NAME}/"
@@ -11,7 +15,7 @@ export FABRIC_CA_CLIENT_HOME="/orgs/ord-orgs/${ORG_NAME}/"
 mkdir -p $FABRIC_CA_CLIENT_HOME
 
 fabric-ca-client enroll \
-  -u https://admin:adminpw@${CA_NAME}:7054 \
+  -u https://${CA_ADMIN_USERNAME}:${CA_ADMIN_PASSWORD}@${CA_NAME}:7054 \
   --caname ca-${ORG_NAME} \
   --tls.certfiles "/orgs/fabric-ca/${ORG_NAME}/tls-cert.pem"
 

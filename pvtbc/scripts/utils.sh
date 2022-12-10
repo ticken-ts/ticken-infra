@@ -28,6 +28,51 @@ function kube_wait_until_job_completed() {
 }
 
 
-function to_lower() {
-  ${$1,,}
+function get_folder_full_path() {
+    relativePath=$1
+    echo "$(cd "$(dirname "$relativePath")"; pwd)/$(basename "$relativePath")"
+}
+
+function get_file_full_path() {
+    relativePath=$1
+    echo "$(cd "$(dirname "$relativePath")"; pwd)"
+}
+
+function replace() {
+    local orginal=$1
+    local old_value=$2
+    local new_value=$3
+
+    echo "${orginal/$old_value/$new_value}"
+}
+
+function copy_recursively() {
+  source=$1
+  target=$2
+  exclude=$3
+
+  # NOTE: we need to initialize target to
+  # determine the full path. If target do not
+  # exist, get_folder_full_path is going to fails
+  mkdir -p $target
+
+  full_source=$(get_folder_full_path $source)
+  full_target=$(get_folder_full_path $target)
+
+  # todo -> handle without excluding
+  find $full_source -type f -not -path "${full_source}/${exclude}/*" -prune -print0 | while IFS= read -r -d '' file
+  do
+    # extract the path of the file
+    filename=$(basename "$file")
+
+    # create a the new path replacing the the
+    # new path in place of the old path
+    source_file_path=$(get_file_full_path "$file")
+    target_file_path=$(replace $source_file_path $full_source $full_target)
+
+    # create the new path if not exists
+    mkdir -p $target_file_path
+
+    cp "$source_file_path/$filename" "$target_file_path/$filename"
+  done
 }
