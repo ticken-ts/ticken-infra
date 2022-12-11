@@ -13,9 +13,18 @@ spec:
         - name: fabricfiles
           persistentVolumeClaim:
             claimName: common-pvc
+
+        - name: external-builder-detect
+          configMap:
+            name: ${ORG_NAME}-peers-config
+            items:
+              - key: detect
+                path: detect
+                mode: 0544
       containers:
-        - name: generate-certs
-          image: hyperledger/fabric-ca-tools:latest
+        - name: activate-chaincode
+          image: ${FABRIC_TOOLS_IMAGE}
+          workingDir: /
           resources:
             requests:
               memory: "300Mi"
@@ -31,9 +40,13 @@ spec:
             - mountPath: /scripts
               name: fabricfiles
               subPath: scripts
+
+            - mountPath: /chaincodes
+              name: fabricfiles
+              subPath: chaincodes
           command:
             - /bin/sh
             - -c
             - |
-              ./scripts/activate-chaincode.sh ${ORG_NAME} ${ORG_NODE} ${ORG_DOMAIN} ${CHANNEL_NAME} ${CHAINCODE_ID} ${CHAINCODE_NAME} ${ORDERER_ORG_NAME} ${ORDERER_ORG_DOMAIN}
+              ./scripts/activate-chaincode.sh ${CHANNEL_NAME} ${ORG_NAME} ${ORG_NODE} ${ORDERER_ORG_NAME} ${CHAINCODE_ID} ${CHAINCODE_NAME}
       restartPolicy: Never

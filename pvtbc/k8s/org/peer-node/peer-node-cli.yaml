@@ -27,11 +27,11 @@ spec:
             requests:
               memory: "200Mi"
               cpu: "90m"
-          image: hyperledger/fabric-tools:2.3
+          image: ${FABRIC_TOOLS_IMAGE}
           workingDir: /
           env:
             - name: ORDERER_CA
-              value: /orgs/ord-orgs/${ORD_NAME}/msp/tlscacerts/tlsca.${ORD_DOMAIN}-cert.pem
+              value: /orgs/ord-orgs/${ORDERER_NAME}/msp/tlscacerts/tlsca.${ORDERER_NAME}-cert.pem
             - name: CORE_PEER_ADDRESS
               value: ${ORG_NAME}-${ORG_NODE}:7051
             - name: CORE_PEER_ID
@@ -52,23 +52,25 @@ spec:
               value: /opt/gopath
             - name: SYS_CHANNEL
               value: system-channel
-            - name: CORE_CHAINCODE_BUILDER
-              value: hyperledger/fabric-ccenv:1.4.8
             - name: FABRIC_LOGGING_SPEC
               value: DEBUG
           volumeMounts:
             - mountPath: /orgs
               name: fabricfiles
               subPath: orgs
+
             - mountPath: /configtx
               name: fabricfiles
               subPath: configtx
+
             - mountPath: /channel-artifacts
               name: fabricfiles
               subPath: channel-artifacts
+
             - mountPath: /scripts
               name: fabricfiles
               subPath: scripts
-            - mountPath: /opt/gopath/src/github.com/chaincode
+
+            - mountPath: /chaincodes
               name: fabricfiles
-              subPath: chaincode
+              subPath: chaincodes

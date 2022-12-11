@@ -17,36 +17,9 @@ spec:
           persistentVolumeClaim:
             claimName: common-pvc
 
-        - name: builders-config
-          configMap:
-            name: ${ORG_NAME}-peers-config
-            items:
-              - key: core.yaml
-                path: core.yaml
-        - name: external-builder-detect
-          configMap:
-            name: ${ORG_NAME}-peers-config
-            items:
-              - key: detect
-                path: detect
-                mode: 0544
-        - name: external-builder-build
-          configMap:
-            name: ${ORG_NAME}-peers-config
-            items:
-              - key: build
-                path: build
-                mode: 0544
-        - name: external-builder-release
-          configMap:
-            name: ${ORG_NAME}-peers-config
-            items:
-              - key: release
-                path: release
-                mode: 0544
       containers:
         - name: peer
-          image: hyperledger/fabric-peer:2.3
+          image: ${FABRIC_PEER_IMAGE}
           command: [ "sh", "-c", "peer node start" ]
           env:
             - name: CORE_PEER_ADDRESSAUTODETECT
@@ -112,30 +85,24 @@ spec:
               memory: "200Mi"
               cpu: "200m"
           volumeMounts:
-            - mountPath: /opt/gopath/src/github.com/chaincode/
+            - mountPath: /opt/gopath/src/github.com/chaincode
               name: fabricfiles
-              subPath: chaincode/
+              subPath: chaincodes
+
             - mountPath: /orgs
               name: fabricfiles
               subPath: orgs
+
             - mountPath: /var/hyperledger/production
               name: fabricfiles
               subPath: state/${ORG_NAME}/peer0
+
             - mountPath: /etc/hyperledger/fabric/core.yaml
-              name: builders-config
-              subPath: core.yaml
-            - mountPath: /builders/external/bin/detect
-              name: external-builder-detect
-              subPath: detect
-            - mountPath: /builders/external/bin/build
-              name: external-builder-build
-              subPath: build
-            - mountPath: /builders/external/bin/release
-              name: external-builder-release
-              subPath: release
+              name: fabricfiles
+              subPath: org-config/core.yaml
 
         - name: couchdb
-          image: couchdb:3.2.2
+          image: ${COUCHDB_IMAGE}
           env:
             - name: COUCHDB_USER
               value: admin

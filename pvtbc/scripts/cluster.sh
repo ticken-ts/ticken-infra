@@ -24,6 +24,7 @@ function _copy_artifacts_to_volume() {
 
   cp -r "../k8s-artifacts/scripts"            "$CLUSTER_VOLUME_PATH/scripts"
   cp -r "../k8s-artifacts/configtx"           "$CLUSTER_VOLUME_PATH/configtx"
+  cp -r "../k8s-artifacts/org-config"         "$CLUSTER_VOLUME_PATH/org-config"
   cp -r "../k8s-artifacts/connection-profile" "$CLUSTER_VOLUME_PATH/connection-profile"
 
   chmod -R 777 $CLUSTER_VOLUME_PATH

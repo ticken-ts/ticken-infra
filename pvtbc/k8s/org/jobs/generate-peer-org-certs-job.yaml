@@ -15,7 +15,7 @@ spec:
             claimName: common-pvc
       containers:
         - name: generate-certs
-          image: hyperledger/fabric-ca-tools:latest
+          image: ${FABRIC_CA_TOOLS_IMAGE}
           resources:
             requests:
               memory: "300Mi"

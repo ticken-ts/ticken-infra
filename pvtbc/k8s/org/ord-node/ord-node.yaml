@@ -17,7 +17,7 @@ spec:
                persistentVolumeClaim:
                   claimName: common-pvc
            containers:
-             - image: hyperledger/fabric-orderer:2.3
+             - image: ${FABRIC_ORDERER_IMAGE}
                name: ${ORG_NAME}
                imagePullPolicy: IfNotPresent
                env:

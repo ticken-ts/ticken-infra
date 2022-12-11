@@ -15,7 +15,7 @@ spec:
             claimName: common-pvc
       containers:
         - name: generate-certs
-          image: hyperledger/fabric-tools:2.3
+          image: ${FABRIC_TOOLS_IMAGE}
           workingDir: /
           resources:
             requests:

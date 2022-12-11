@@ -18,7 +18,7 @@ spec:
             claimName: common-pvc
       containers:
         - name: ca-${ORG_NAME}
-          image: hyperledger/fabric-ca:1.4.9
+          image: ${FABRIC_CA_IMAGE}
           imagePullPolicy: "Always"
           command:
             [

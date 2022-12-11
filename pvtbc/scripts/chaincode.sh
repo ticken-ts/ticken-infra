@@ -61,8 +61,7 @@ EOF
 
   cat << EOF > ${cc_folder}/metadata.json
 {
-  "path": "",
-  "type": "external",
+  "type": "ccaas",
   "label": "${cc_label}"
 }
 EOF
