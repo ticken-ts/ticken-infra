@@ -21,7 +21,7 @@ function bootstrap() {
     echo "*** Orderer org deployed ***"
 
     echo "*** Deploying genesis org: $GENESIS_ORG_NAME ***"
-    deploy_peer_organization $GENESIS_ORG_NAME
+    deploy_peer_organization $GENESIS_ORG_NAME $ORDERER_ORG_NAME
     echo "*** Genesis org deployed ***"
 
     _rename
@@ -34,19 +34,17 @@ function bootstrap() {
     join_channel $TICKEN_CHANNEL_NAME $GENESIS_ORG_NAME
     echo "*** Channel joined ***"
 
-    echo "*** Deploying contracts in org: $GENESIS_ORG_NAME ***"
-    deploy_chaincode \
-      $GENESIS_ORG_NAME $GENESIS_ORG_DOMAIN $CHANNEL_NAME \
-      $TICKEN_EVENT_CHAINCODE_NAME $TICKEN_EVENT_CHAINCODE_PATH \
-      $ORDERER_ORG_NAME $ORDERER_ORG_DOMAIN \
-      $K8_NAMESPACE
-#
+#    echo "*** Deploying contracts in org: $GENESIS_ORG_NAME ***"
 #    deploy_chaincode \
-#      $GENESIS_ORG_NAME $GENESIS_ORG_DOMAIN $CHANNEL_NAME \
-#      $TICKEN_TICKEN_TICKET_CHAINCODE_NAME $TICKEN_TICKEN_TICKET_CHAINCODE_PATH \
-#      $ORDERER_ORG_NAME $ORDERER_ORG_DOMAIN \
-#      $K8_NAMESPACE
-#    echo "*** Chaincode deployed ***"
+#      $TICKEN_CHANNEL_NAME \
+#      $GENESIS_ORG_NAME $ORDERER_ORG_NAME \
+#      $TICKEN_EVENT_CHAINCODE_NAME $TICKEN_EVENT_CHAINCODE_PATH
+
+#    deploy_chaincode \
+#      $TICKEN_CHANNEL_NAME \
+#      $GENESIS_ORG_NAME $ORDERER_ORG_NAME \
+#      $TICKEN_TICKET_CHAINCODE_NAME $TICKEN_TICKET_CHAINCODE_PATH
+    echo "*** Chaincode deployed ***"
 }
 
 bootstrap

@@ -49,9 +49,11 @@ function _deploy_ord_node() {
 function _deploy_peer_node() {
   local org_name=$1
   local org_node=$2
+  local orderer_name=$3
 
   export ORG_NAME=$org_name
   export ORG_NODE=$org_node
+  export ORDERER_NAME=$orderer_name
 
   kube_apply_template "$K8S_ORG_PEER_NODES_PATH/peer-configmap.yaml" $CLUSTER_NAMESPACE
   kube_apply_template "$K8S_ORG_PEER_NODES_PATH/peer-node.yaml" $CLUSTER_NAMESPACE
@@ -79,6 +81,7 @@ function deploy_ord_organization() {
 
 function deploy_peer_organization() {
   local org_name=$1
+  local orderer_name=$2
   local peer_node="peer0"
 
   # first we need to deploy CA's and generate certificates
@@ -90,5 +93,5 @@ function deploy_peer_organization() {
 
   # once the certificated are generated, it's time
   # to deploy de orderer nodes
-  _deploy_peer_node $org_name $peer_node
+  _deploy_peer_node $org_name $peer_node $orderer_name
 }

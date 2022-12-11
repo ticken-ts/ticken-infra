@@ -1,6 +1,7 @@
 function _pull_docker_images() {
   $CONTAINER_CLI pull ${FABRIC_CA_TOOLS_IMAGE}
   $CONTAINER_CLI pull ${FABRIC_ORDERER_IMAGE}
+  $CONTAINER_CLI pull ${CCAAS_BUILDER_IMAGE}
   $CONTAINER_CLI pull ${FABRIC_TOOLS_IMAGE}
   $CONTAINER_CLI pull ${FABRIC_PEER_IMAGE}
   $CONTAINER_CLI pull ${FABRIC_CA_IMAGE}
@@ -10,6 +11,7 @@ function _pull_docker_images() {
 function _kind_load_docker_images() {
   kind load docker-image ${FABRIC_CA_TOOLS_IMAGE} --name $CLUSTER_NAME
   kind load docker-image ${FABRIC_ORDERER_IMAGE}  --name $CLUSTER_NAME
+  kind load docker-image ${CCAAS_BUILDER_IMAGE}   --name $CLUSTER_NAME
   kind load docker-image ${FABRIC_TOOLS_IMAGE}    --name $CLUSTER_NAME
   kind load docker-image ${FABRIC_PEER_IMAGE}     --name $CLUSTER_NAME
   kind load docker-image ${FABRIC_CA_IMAGE}       --name $CLUSTER_NAME
@@ -34,28 +36,57 @@ function _init_cluster_volumes() {
 }
 
 function _kind_init() {
-  kind create cluster --name $CLUSTER_NAME --config "$K8S_CLUSTER_FILES_PATH/kind-cluster.yaml"
-}
-
-function _kind_launch_docker_registry() {
-  # create registry container unless it already exists
   local reg_name=${LOCAL_REGISTRY_NAME}
   local reg_port=${LOCAL_REGISTRY_PORT}
-  local reg_interface=${LOCAL_REGISTRY_INTERFACE}
 
-  running="$(docker inspect -f '{{.State.Running}}' "${reg_name}" 2>/dev/null || true)"
-  if [ "${running}" != 'true' ]; then
-    docker run  \
-      --detach  \
-      --restart always \
-      --name    "${reg_name}" \
-      --publish "${reg_interface}:${reg_port}:5000" \
-      registry:2
-  fi
+  local ingress_http_port=${NGINX_HTTP_PORT}
+  local ingress_https_port=${NGINX_HTTPS_PORT}
+
+  cat <<EOF | kind create cluster --name $CLUSTER_NAME --config=-
+---
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+  - role: control-plane
+    kubeadmConfigPatches:
+      - |
+        kind: InitConfiguration
+        nodeRegistration:
+          kubeletExtraArgs:
+            node-labels: "ingress-ready=true"
+
+    extraMounts:
+      - hostPath: /tmp/ticken-pv
+        containerPath: /ticken-pv
+
+    extraPortMappings:
+      - containerPort: 80
+        hostPort: ${ingress_http_port}
+        protocol: TCP
+
+      - containerPort: 443
+        hostPort: ${ingress_https_port}
+        protocol: TCP
+
+# create a cluster with the local registry enabled in containerd
+containerdConfigPatches:
+- |-
+  [plugins."io.containerd.grpc.v1.cri".registry.mirrors."localhost:${reg_port}"]
+    endpoint = ["http://${reg_name}:${reg_port}"]
+
+EOF
 
   # connect the registry to the cluster network
   # (the network may already be connected)
   docker network connect "kind" "${reg_name}" || true
+
+  for node in $(kind get nodes --name $CLUSTER_NAME); do
+    kubectl annotate node "${node}" "kind.x-k8s.io/registry=localhost:${reg_port}";
+
+    # workaround for https://github.com/hyperledger/fabric-samples/issues/550 -
+    # pods can not resolve external DNS
+    docker exec "$node" sysctl net.ipv4.conf.all.route_localnet=1;
+  done
 
   # Document the local registry
   # https://github.com/kubernetes/enhancements/tree/master/keps/sig-cluster-lifecycle/generic/1755-communicating-a-local-registry
@@ -73,11 +104,28 @@ data:
 EOF
 }
 
+function _launch_docker_registry() {
+  # create registry container unless it already exists
+  local reg_name=${LOCAL_REGISTRY_NAME}
+  local reg_port=${LOCAL_REGISTRY_PORT}
+  local reg_interface=${LOCAL_REGISTRY_INTERFACE}
+  local reg_storage_path=${LOCAL_REGITRY_STORAGE}
 
+  running="$(docker inspect -f '{{.State.Running}}' "${reg_name}" 2>/dev/null || true)"
+  if [ "${running}" != 'true' ]; then
+    docker run  \
+      --detach  \
+      --restart always \
+      --name "${reg_name}" \
+      -v ${reg_storage_path}:/var/lib/regis \
+      --publish "${reg_interface}:${reg_port}:5000" \
+      registry:2
+  fi
+}
 
 function ticken_cluster_init() {
+  _launch_docker_registry
   _kind_init
-  _kind_launch_docker_registry
   _pull_docker_images
   _kind_load_docker_images
   _copy_artifacts_to_volume
