@@ -10,6 +10,8 @@ function context() {
 }
 
 #----------------------- TICKEN NETWORK --------------------------#
+context DOMAIN "localho.st"
+
 context TICKEN_CHANNEL_NAME "ticken-channel"
 
 context GENESIS_ORG_NAME "ticken"
@@ -34,6 +36,7 @@ context K8S_ORG_JOBS_PATH       "$K8S_BASE_PATH/org/jobs"
 context K8S_ORG_ORD_NODES_PATH  "$K8S_BASE_PATH/org/ord-node"
 context K8S_ORG_PEER_NODES_PATH "$K8S_BASE_PATH/org/peer-node"
 context K8S_CHAINCODE_PATH      "$K8S_BASE_PATH/org/chaincode"
+context K8S_INGRESS_PATH        "$K8S_BASE_PATH/org/ingress"
 #-----------------------------------------------------------------#
 
 

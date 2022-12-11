@@ -15,15 +15,15 @@ function bootstrap() {
 #    echo "*** Starting cluster ***"
 #    ticken_cluster_init
 #    echo "*** Cluster started ***"
-#
-#    echo "*** Deploying orderer org: $ORDERER_ORG_NAME ***"
-#    deploy_ord_organization $ORDERER_ORG_NAME
-#    echo "*** Orderer org deployed ***"
-#
-#    echo "*** Deploying genesis org: $GENESIS_ORG_NAME ***"
-#    deploy_peer_organization $GENESIS_ORG_NAME $ORDERER_ORG_NAME
-#    echo "*** Genesis org deployed ***"
-#
+
+    echo "*** Deploying orderer org: $ORDERER_ORG_NAME ***"
+    deploy_ord_organization $ORDERER_ORG_NAME
+    echo "*** Orderer org deployed ***"
+
+    echo "*** Deploying genesis org: $GENESIS_ORG_NAME ***"
+    deploy_peer_organization $GENESIS_ORG_NAME $ORDERER_ORG_NAME
+    echo "*** Genesis org deployed ***"
+
 #    _rename
 #
 #    echo "*** Creating channel: $TICKEN_CHANNEL_NAME ***"
@@ -33,18 +33,18 @@ function bootstrap() {
 #    echo "*** Joining channel: ${CHANNEL_NAME} ***"
 #    join_channel $TICKEN_CHANNEL_NAME $GENESIS_ORG_NAME
 #    echo "*** Channel joined ***"
-
+#
 #    echo "*** Deploying contracts in org: $GENESIS_ORG_NAME ***"
 #    deploy_chaincode \
 #      $TICKEN_CHANNEL_NAME \
 #      $GENESIS_ORG_NAME $ORDERER_ORG_NAME \
 #      $TICKEN_EVENT_CHAINCODE_NAME $TICKEN_EVENT_CHAINCODE_PATH
-
-    deploy_chaincode \
-      $TICKEN_CHANNEL_NAME \
-      $GENESIS_ORG_NAME $ORDERER_ORG_NAME \
-      $TICKEN_TICKET_CHAINCODE_NAME $TICKEN_TICKET_CHAINCODE_PATH
-    echo "*** Chaincode deployed ***"
+#
+#    deploy_chaincode \
+#      $TICKEN_CHANNEL_NAME \
+#      $GENESIS_ORG_NAME $ORDERER_ORG_NAME \
+#      $TICKEN_TICKET_CHAINCODE_NAME $TICKEN_TICKET_CHAINCODE_PATH
+#    echo "*** Chaincode deployed ***"
 }
 
 bootstrap

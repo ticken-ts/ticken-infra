@@ -72,6 +72,7 @@ spec:
 
                 - name: ORDERER_OPERATIONS_LISTENADDRESS
                   value: 0.0.0.0:8443
+
                 - name: ORDERER_ADMIN_LISTENADDRESS
                   value: 0.0.0.0:9443
 
@@ -81,7 +82,19 @@ spec:
                     cpu: "250m"
                  requests:
                     memory: "200Mi"
-                    cpu: "150m"               
+                    cpu: "150m"
+
+               livenessProbe:
+                 httpGet:
+                   path: /healthz
+                   port: 8443
+                 initialDelaySeconds: 10
+                 failureThreshold: 3
+                 periodSeconds: 1
+                 timeoutSeconds: 1
+               ports:
+                 - containerPort: 7050
+                 - containerPort: 8443
                
                volumeMounts:
                 - name:  fabricfiles

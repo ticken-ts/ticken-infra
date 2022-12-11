@@ -124,11 +124,48 @@ function _launch_docker_registry() {
   fi
 }
 
+function _apply_nginx_ingress() {
+  # 1.1.2 static ingress with modifications to enable ssl-passthrough
+  # k3s : 'cloud'
+  # kind : 'kind'
+  # kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.1.2/deploy/static/provider/cloud/deploy.yaml
+
+  kubectl apply -f "$K8S_CLUSTER_FILES_PATH/ingress-nginx-kind.yaml"
+
+  # wait for nginx
+  kubectl wait --namespace ingress-nginx \
+    --for=condition=ready pod \
+    --selector=app.kubernetes.io/component=controller \
+    --timeout=2m
+}
+
+function _apply_cert_manager() {
+  # Install cert-manager to manage TLS certificates
+  kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.6.1/cert-manager.yaml
+
+  kubectl -n cert-manager rollout status deploy/cert-manager
+  kubectl -n cert-manager rollout status deploy/cert-manager-cainjector
+  kubectl -n cert-manager rollout status deploy/cert-manager-webhook
+}
+
+function _launch_root_CA() {
+    kubectl -n $CLUSTER_NAMESPACE apply -f $K8S_CLUSTER_FILES_PATH/root-tls-cert-issuer.yaml
+    kubectl -n $CLUSTER_NAMESPACE wait --timeout=30s --for=condition=Ready issuer/root-tls-cert-issuer
+}
+
+
 function ticken_cluster_init() {
   _launch_docker_registry
   _kind_init
+  _apply_nginx_ingress
+  _apply_cert_manager
+
+
   _pull_docker_images
   _kind_load_docker_images
+
   _copy_artifacts_to_volume
   _init_cluster_volumes
+
+  _launch_root_CA
 }
