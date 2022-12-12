@@ -3,7 +3,7 @@ version: '3.9'
 networks:
   central_perk:
     name: fabric_test
-    external: true
+    #external: true
 
 services:
   keycloak:
@@ -17,3 +17,5 @@ services:
     command: "start-dev"
     networks:
       - central_perk
+    volumes:
+      - ./themes:/opt/keycloak/themes

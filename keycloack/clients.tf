@@ -29,7 +29,15 @@ resource "keycloak_openid_client" "postman_attendant_app" {
   enabled                      = true
 
   access_type                  = "PUBLIC"
-  direct_access_grants_enabled = true
+  standard_flow_enabled = true
+  valid_redirect_uris = [
+    "exp://*"
+  ]
+  valid_post_logout_redirect_uris = [
+    "exp://*"
+  ]
+  
+  login_theme = "mytheme"
 }
 
 resource "keycloak_openid_client_default_scopes" "postman_attendant_app_default_scopes" {
@@ -80,7 +88,16 @@ resource "keycloak_openid_client" "postman_organizer_app" {
   enabled             = true
 
   access_type                  = "PUBLIC"
-  direct_access_grants_enabled = true
+  standard_flow_enabled = true
+  
+  valid_redirect_uris = [
+    "http://localhost:5173/*"
+  ]
+  valid_post_logout_redirect_uris = [
+    "http://localhost:5173/*"
+  ]
+  
+  login_theme = "mytheme"
 }
 
 resource "keycloak_openid_client_default_scopes" "postman_organizer_app_default_scopes" {
