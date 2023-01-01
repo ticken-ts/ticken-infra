@@ -1,0 +1,41 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: enroll-root-ca-admin-${ORG_NAME}
+spec:
+  parallelism: 1
+  completions: 1
+  template:
+    metadata:
+      name: create-certs
+    spec:
+      volumes:
+        - name: fabric-files
+          persistentVolumeClaim:
+            claimName: common-pvc
+
+        - name: tls-cert-volume
+          secret:
+            secretName: ${ORG_NAME}-ca-tls-cert
+            optional: false
+
+      containers:
+        - name: generate-certs
+          image: ${FABRIC_CA_TOOLS_IMAGE}
+          volumeMounts:
+            - mountPath: /orgs
+              name: fabric-files
+              subPath: orgs
+
+            - mountPath: /scripts
+              name: fabric-files
+              subPath: scripts
+
+            - name: tls-cert-volume
+              mountPath: /tls
+              readOnly: true
+          command:
+            - /bin/sh
+            - -c
+            - ./scripts/enrollments/enroll-root-ca-admin.sh ${ORG_NAME} ${ORG_TYPE} ${RCAADMIN_USER} ${RCAADMIN_PASS}
+      restartPolicy: Never

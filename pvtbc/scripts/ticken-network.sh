@@ -1,50 +1,81 @@
 . const.sh
-. cluster.sh
+. logs.sh
 . utils.sh
+. cluster.sh
 . channel.sh
 . chaincode.sh
 . organization.sh
 
-function _rename() {
-  # todo -> this should be done inside the kubernetes job that instantiates de CA's and the certificates
-  sh ../k8s-artifacts/scripts/utils/rename-priv-keys.sh /tmp/ticken-pv/orgs/ord-orgs priv.pem
-  sh ../k8s-artifacts/scripts/utils/rename-priv-keys.sh /tmp/ticken-pv/orgs/peer-orgs priv.pem
-}
+# enables the "errexit" option, which causes the shell to exit
+# immediately if a command exits with a non-zero exit status.
+set -o errexit
+
+# Initialize the logging system - control output to 'network.log'
+# and everything else to 'network-debug.log'
+logging_init
 
 function bootstrap() {
-#    echo "*** Starting cluster ***"
-#    ticken_cluster_init
-#    echo "*** Cluster started ***"
+#  log_op "Starting cluster"
+#  ticken_cluster_init
+#  log_op "Cluster running"
 
-    echo "*** Deploying orderer org: $ORDERER_ORG_NAME ***"
-    deploy_ord_organization $ORDERER_ORG_NAME
-    echo "*** Orderer org deployed ***"
+  log_op "Deploying org: $ORDERER_ORG_NAME"
+  deploy_org $ORDERER_ORG_NAME $ORDERER_ORG_TYPE
+  log_op "Deployed org: $ORDERER_ORG_NAME"
 
-    echo "*** Deploying genesis org: $GENESIS_ORG_NAME ***"
-    deploy_peer_organization $GENESIS_ORG_NAME $ORDERER_ORG_NAME
-    echo "*** Genesis org deployed ***"
+  log_op "Deploying org: $GENESIS_ORG_NAME"
+  deploy_org $GENESIS_ORG_NAME $PEER_ORG_TYPE
+  log_op "Deployed org: $GENESIS_ORG_NAME"
 
-#    _rename
+#  _rename_privs
 #
-#    echo "*** Creating channel: $TICKEN_CHANNEL_NAME ***"
-#    create_channel $TICKEN_CHANNEL_NAME $ORDERER_ORG_NAME
-#    echo "*** Channel created ***"
+#  log_op "Creating channel: $TICKEN_CHANNEL_NAME"
+#  create_channel $TICKEN_CHANNEL_NAME $ORDERER_ORG_NAME
+#  log_op "Channel created: $TICKEN_CHANNEL_NAME"
+
+#  log_op "Joining channel: $CHANNEL_NAME"
+#  join_channel $TICKEN_CHANNEL_NAME $GENESIS_ORG_NAME $$ORDERER_ORG_NAME
+#  log_op "Channel joined"
+
+#  log_op "Deploying contract $TICKEN_EVENT_CHAINCODE_NAME in $GENESIS_ORG_NAME"
+#  deploy_chaincode \
+#    $TICKEN_CHANNEL_NAME \
+#    $GENESIS_ORG_NAME $ORDERER_ORG_NAME \
+#    $TICKEN_EVENT_CHAINCODE_NAME $TICKEN_EVENT_CHAINCODE_PATH
+#  log_op "$TICKEN_EVENT_CHAINCODE_NAME deployed"
 #
-#    echo "*** Joining channel: ${CHANNEL_NAME} ***"
-#    join_channel $TICKEN_CHANNEL_NAME $GENESIS_ORG_NAME
-#    echo "*** Channel joined ***"
-#
-#    echo "*** Deploying contracts in org: $GENESIS_ORG_NAME ***"
-#    deploy_chaincode \
-#      $TICKEN_CHANNEL_NAME \
-#      $GENESIS_ORG_NAME $ORDERER_ORG_NAME \
-#      $TICKEN_EVENT_CHAINCODE_NAME $TICKEN_EVENT_CHAINCODE_PATH
-#
-#    deploy_chaincode \
-#      $TICKEN_CHANNEL_NAME \
-#      $GENESIS_ORG_NAME $ORDERER_ORG_NAME \
-#      $TICKEN_TICKET_CHAINCODE_NAME $TICKEN_TICKET_CHAINCODE_PATH
-#    echo "*** Chaincode deployed ***"
+#  log_op "Deploying contract $TICKEN_TICKET_CHAINCODE_NAME in $GENESIS_ORG_NAME"
+#  deploy_chaincode \
+#    $TICKEN_CHANNEL_NAME \
+#    $GENESIS_ORG_NAME $ORDERER_ORG_NAME \
+#    $TICKEN_TICKET_CHAINCODE_NAME $TICKEN_TICKET_CHAINCODE_PATH
+#  log_op "$TICKEN_TICKET_CHAINCODE_NAME deployed"
 }
 
-bootstrap
+function armaggedon() {
+  log_op "stopping cluster"
+  ticken_cluster_delete
+  log_op "cluster stopped"
+
+#  log_op "destroy_org org $ORDERER_ORG_NAME"
+#  destroy_org $ORDERER_ORG_NAME
+#  log_op "ord destroyed"
+#
+#  log_op "destroying org $GENESIS_ORG_NAME"
+#  destroy_org $GENESIS_ORG_NAME
+#  log_op "org destroyed"
+}
+
+MODE=$1
+
+if [ "${MODE}" == "bootstrap" ]; then
+  log_title "⛓️ - Bootstrapping Ticken network - ⛓ "
+  bootstrap
+  log_title "🏁 - Ticken network running - 🏁 "
+fi
+
+if [ "${MODE}" == "armaggedon" ]; then
+  log_title "🔥 - Destroying Ticken network - 🔥 "
+  armaggedon
+  log_title "🏁 - Ticken network destroyed - 🏁"
+fi

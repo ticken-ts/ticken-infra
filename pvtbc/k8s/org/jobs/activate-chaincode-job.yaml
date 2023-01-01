@@ -10,43 +10,37 @@ spec:
       name: create-certs
     spec:
       volumes:
-        - name: fabricfiles
+        - name: fabric-files
           persistentVolumeClaim:
             claimName: common-pvc
 
-        - name: external-builder-detect
+        - name: fabric-config
           configMap:
-            name: ${ORG_NAME}-peers-config
-            items:
-              - key: detect
-                path: detect
-                mode: 0544
+            name: ${ORG_NAME}-config
+
       containers:
         - name: activate-chaincode
           image: ${FABRIC_TOOLS_IMAGE}
           workingDir: /
-          resources:
-            requests:
-              memory: "300Mi"
-              cpu: "300m"
-            limits:
-              memory: "500Mi"
-              cpu: "350m"
+
           volumeMounts:
             - mountPath: /orgs
-              name: fabricfiles
+              name: fabric-files
               subPath: orgs
 
             - mountPath: /scripts
-              name: fabricfiles
+              name: fabric-files
               subPath: scripts
 
             - mountPath: /chaincodes
-              name: fabricfiles
+              name: fabric-files
               subPath: chaincodes
+
+            - mountPath: /config
+              name: fabric-config
           command:
             - /bin/sh
             - -c
             - |
-              ./scripts/activate-chaincode.sh ${CHANNEL_NAME} ${ORG_NAME} ${ORG_NODE} ${ORDERER_ORG_NAME} ${CHAINCODE_ID} ${CHAINCODE_NAME}
+              ./scripts/chaincode/activate-chaincode.sh ${CHANNEL_NAME} ${ORG_NAME} ${ORG_NODE} ${ORDERER_ORG_NAME} ${CHAINCODE_ID} ${CHAINCODE_NAME}
       restartPolicy: Never

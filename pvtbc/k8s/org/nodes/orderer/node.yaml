@@ -1,0 +1,109 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: ${ORG_NAME}-${ORG_NODE}-tls-cert
+spec:
+  isCA: false
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  dnsNames:
+    - localhost
+    - ${ORG_NAME}-${ORG_NODE}
+    - ${ORG_NAME}-${ORG_NODE}.${CLUSTER_NAMESPACE}.svc.cluster.local
+    - ${ORG_NAME}-${ORG_NODE}.${DOMAIN}
+    - ${ORG_NAME}-${ORG_NODE}-operations.${DOMAIN}
+  ipAddresses:
+    - 127.0.0.1
+  secretName: ${ORG_NAME}-${ORG_NODE}-tls-cert
+  issuerRef:
+    name: ${ORG_NAME}-tls-cert-issuer
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: ${ORG_NAME}-${ORG_NODE}
+spec:
+    selector:
+        matchLabels:
+            name: ${ORG_NAME}-${ORG_NODE}
+    replicas: 1
+    template:
+        metadata:
+            labels:
+                name: ${ORG_NAME}-${ORG_NODE}
+        spec:
+           volumes:
+             - name: fabric-files
+               persistentVolumeClaim:
+                  claimName: common-pvc
+
+             - name: fabric-config
+               configMap:
+                 name: ${ORG_NAME}-config
+
+             - name: tls-cert-volume
+               secret:
+                 secretName: ${ORG_NAME}-${ORG_NODE}-tls-cert
+
+           containers:
+             - image: ${FABRIC_ORDERER_IMAGE}
+               name: ${ORG_NAME}
+               imagePullPolicy: IfNotPresent
+               env:
+                - name: FABRIC_CFG_PATH
+                  value: /var/hyperledger/fabric/config
+                - name: ORDERER_GENERAL_LOCALMSPID
+                  value: ${ORG_NAME}MSP
+                - name: ORDERER_GENERAL_LOGLEVEL
+                  value: debug
+                - name: ORDERER_GENERAL_LOCALMSPDIR
+                  value: /orgs/orderer-orgs/${ORG_NAME}/nodes/${ORG_NAME}-${ORG_NODE}/msp
+
+                - name: ORDERER_GENERAL_TLS_CERTIFICATE
+                  value: /var/hyperledger/fabric/config/tls/tls.crt
+                - name: ORDERER_GENERAL_TLS_PRIVATEKEY
+                  value: /var/hyperledger/fabric/config/tls/tls.key
+                - name: ORDERER_GENERAL_TLS_ROOTCAS
+                  value: /var/hyperledger/fabric/config/tls/ca.crt
+
+                - name: ORDERER_ADMIN_TLS_CERTIFICATE
+                  value: /var/hyperledger/fabric/config/tls/tls.crt
+                - name: ORDERER_ADMIN_TLS_PRIVATEKEY
+                  value: /var/hyperledger/fabric/config/tls/tls.key
+                - name: ORDERER_ADMIN_TLS_ROOTCAS
+                  value: /var/hyperledger/fabric/config/tls/ca.crt
+
+                - name: ORDERER_OPERATIONS_TLS_CERTIFICATE
+                  value: /var/hyperledger/fabric/config/tls/tls.crt
+                - name: ORDERER_OPERATIONS_TLS_PRIVATEKEY
+                  value: /var/hyperledger/fabric/config/tls/tls.key
+                - name: ORDERER_OPERATIONS_TLS_ROOTCAS
+                  value: /var/hyperledger/fabric/config/tls/ca.crt
+
+                  # Authenticate client connections with the org's ecert / admin user enrollments
+                - name: ORDERER_ADMIN_TLS_CLIENTROOTCAS
+                  value: /orgs/orderer-orgs/${ORG_NAME}/nodes/${ORG_NAME}-${ORG_NODE}/msp/cacerts/${ORG_NAME}-ca-7054.pem
+
+                - name: ORDERER_OPERATIONS_LISTENADDRESS
+                  value: 0.0.0.0:8443
+                - name: ORDERER_ADMIN_LISTENADDRESS
+                  value: 0.0.0.0:9443
+
+               ports:
+                 - containerPort: 7050
+                 - containerPort: 8443
+                 - containerPort: 9443
+
+               volumeMounts:
+                - name: fabric-files
+                  mountPath: /orgs
+                  subPath: orgs
+
+                - name: fabric-config
+                  mountPath: /var/hyperledger/fabric/config
+
+                - name: tls-cert-volume
+                  mountPath: /var/hyperledger/fabric/config/tls
+                  readOnly: true

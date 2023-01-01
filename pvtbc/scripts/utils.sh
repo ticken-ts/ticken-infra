@@ -1,4 +1,11 @@
+function pull_image_if_not_present() {
+  local image=$1
 
+  if [[ "$($CONTAINERS_CLI
+   images -q ${image} 2> /dev/null)" == "" ]]; then
+    $CONTAINERS_CLI pull ${image}
+  fi
+}
 
 # replace the environment variables on the template and apply
 # it to using kubectl command on the namespace passed by parameter
@@ -11,7 +18,7 @@ function kube_show_template() {
 }
 
 function kube_wait_until_pod_running() {
-  cat $1 | envsubst | kubectl -n $2 wait --for=condition=Available=True -f -
+  cat $1 | envsubst | kubectl -n $2 rollout status -f -
 }
 
 function kube_wait_until_job_completed() {
@@ -30,11 +37,11 @@ function get_file_full_path() {
 }
 
 function replace() {
-    local orginal=$1
+    local original=$1
     local old_value=$2
     local new_value=$3
 
-    echo "${orginal/$old_value/$new_value}"
+    echo "${original/$old_value/$new_value}"
 }
 
 function copy_recursively() {
@@ -66,4 +73,10 @@ function copy_recursively() {
 
     cp "$source_file_path/$filename" "$target_file_path/$filename"
   done
+}
+
+function _rename_privs() {
+  # todo -> this should be done inside the kubernetes job that instantiates de CA's and the certificates
+  sh ../k8s-artifacts/scripts/utils/rename-priv-keys.sh /tmp/ticken-pv/orgs/orderer-orgs priv.pem
+  sh ../k8s-artifacts/scripts/utils/rename-priv-keys.sh /tmp/ticken-pv/orgs/peer-orgs priv.pem
 }

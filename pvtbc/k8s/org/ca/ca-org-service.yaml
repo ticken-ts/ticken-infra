@@ -1,34 +1,13 @@
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: ${ORG_NAME}-ca-tls-cert
-spec:
-  isCA: false
-  privateKey:
-    algorithm: ECDSA
-    size: 256
-  dnsNames:
-    - localhost
-    - ${ORG_NAME}-ca
-    - ${ORG_NAME}-ca.${CLUSTER_NAMESPACE}.svc.cluster.local
-    - ${ORG_NAME}-ca.${DOMAIN}
-  ipAddresses:
-    - 127.0.0.1
-  secretName: ${ORG_NAME}-ca-tls-cert
-  issuerRef:
-    name: ${ORG_NAME}-tls-cert-issuer
----
-
 apiVersion: v1
 kind: Service
 metadata:
-  name: ca-${ORG_NAME}
+  name: ${ORG_NAME}-ca
   labels:
-    app: ca-${ORG_NAME}
+    app: ${ORG_NAME}-ca
 spec:
   type: ClusterIP
   selector:
-    app: ca-${ORG_NAME}
+    app: ${ORG_NAME}-ca
   ports:
     - protocol: TCP
       targetPort: 7054
@@ -52,11 +31,11 @@ spec:
         paths:
           - backend:
               service:
-                name: ca-${ORG_NAME}
+                name: ${ORG_NAME}-ca
                 port:
                   number: 7054
             path: /
             pathType: ImplementationSpecific
   tls:
     - hosts:
-      - ${ORG_NAME}-ca.${DOMAIN}
+        - ${ORG_NAME}-ca.${DOMAIN}

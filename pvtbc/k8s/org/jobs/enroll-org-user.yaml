@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: generate-certs-${ORG_NAME}
+  name: enroll-org-user-${ORG_NAME}-${USER_NAME}
 spec:
   parallelism: 1
   completions: 1
@@ -10,30 +10,32 @@ spec:
       name: create-certs
     spec:
       volumes:
-        - name: fabricfiles
+        - name: fabric-files
           persistentVolumeClaim:
             claimName: common-pvc
+
+        - name: tls-cert-volume
+          secret:
+            secretName: ${ORG_NAME}-ca-tls-cert
+            optional: false
+
       containers:
         - name: generate-certs
           image: ${FABRIC_CA_TOOLS_IMAGE}
-          resources:
-            requests:
-              memory: "300Mi"
-              cpu: "300m"
-            limits:
-              memory: "500Mi"
-              cpu: "350m"
           volumeMounts:
             - mountPath: /orgs
-              name: fabricfiles
+              name: fabric-files
               subPath: orgs
 
             - mountPath: /scripts
-              name: fabricfiles
+              name: fabric-files
               subPath: scripts
+
+            - name: tls-cert-volume
+              mountPath: /tls
+              readOnly: true
           command:
             - /bin/sh
             - -c
-            - |
-              ./scripts/gen-ord-org-certs.sh ${ORG_NAME} ${CA_ADMIN_USERNAME} ${CA_ADMIN_PASSWORD}
+            - ./scripts/enrollments/enroll-org-user.sh ${ORG_NAME} ${ORG_TYPE} ${USER_NAME} ${USER_TYPE} ${RCAADMIN_USER}
       restartPolicy: Never

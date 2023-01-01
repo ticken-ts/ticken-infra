@@ -10,7 +10,7 @@ spec:
       name: create-channel-${CHANNEL_NAME}
     spec:
       volumes:
-        - name: fabricfiles
+        - name: fabric-files
           persistentVolumeClaim:
             claimName: common-pvc
       containers:
@@ -26,22 +26,22 @@ spec:
               cpu: "350m"
           volumeMounts:
             - mountPath: /orgs
-              name: fabricfiles
+              name: fabric-files
               subPath: orgs
 
             - mountPath: /scripts
-              name: fabricfiles
+              name: fabric-files
               subPath: scripts
 
             - mountPath: /configtx
-              name: fabricfiles
+              name: fabric-files
               subPath: configtx
 
             - mountPath: /channel-artifacts
-              name: fabricfiles
+              name: fabric-files
               subPath: channel-artifacts
           command:
             - /bin/sh
             - -c
-            - ./scripts/create-channel.sh ${CHANNEL_NAME} ${ORDERER_ORG_NAME}
+            - ./scripts/channel/create-channel.sh ${CHANNEL_NAME} ${ORDERER_ORG_NAME}
       restartPolicy: Never

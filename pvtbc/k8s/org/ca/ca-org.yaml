@@ -1,47 +1,78 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: ${ORG_NAME}-ca-tls-cert
+spec:
+  isCA: false
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  dnsNames:
+    - localhost
+    - ${ORG_NAME}-ca
+    - ${ORG_NAME}-ca.${CLUSTER_NAMESPACE}.svc.cluster.local
+    - ${ORG_NAME}-ca.${DOMAIN}
+  ipAddresses:
+    - 127.0.0.1
+  secretName: ${ORG_NAME}-ca-tls-cert
+  issuerRef:
+    name: ${ORG_NAME}-tls-cert-issuer
+---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ca-${ORG_NAME}
+  name: ${ORG_NAME}-ca
 spec:
   selector:
     matchLabels:
-      app: ca-${ORG_NAME}
+      app: ${ORG_NAME}-ca
   replicas: 1
   template:
     metadata:
       labels:
-        app: ca-${ORG_NAME}
+        app: ${ORG_NAME}-ca
     spec:
       volumes:
         - name: data
           persistentVolumeClaim:
             claimName: common-pvc
+
+        - name: fabric-config
+          configMap:
+            name: ${ORG_NAME}-config
+
+        - name: tls-cert-volume
+          secret:
+            secretName: ${ORG_NAME}-ca-tls-cert
+            optional: false
+
       containers:
-        - name: ca-${ORG_NAME}
+        - name: ${ORG_NAME}-ca
           image: ${FABRIC_CA_IMAGE}
-          imagePullPolicy: "Always"
-          command:
-            [
-              "fabric-ca-server" ,
-              "start", "-b" ,"${CA_ADMIN_USERNAME}:${CA_ADMIN_PASSWORD}","--port", "7054", "-d"
-            ]
-          resources:
-            requests:
-              memory: "300Mi"
-              cpu: "250m"
-            limits:
-              memory: "400Mi"
-              cpu: "350m"
+          imagePullPolicy: IfNotPresent
           env:
            - name: FABRIC_CA_SERVER_CA_NAME
-             value: "ca-${ORG_NAME}"
-           - name: FABRIC_CA_SERVER_TLS_ENABLED
-             value: "true"
-           - name: FABRIC_CA_SERVER_CSR_CN
-             value: "ca-${ORG_NAME}"
-           - name: FABRIC_CA_SERVER_CSR_HOSTS
-             value: "ca-${ORG_NAME}"
+             value: "${ORG_NAME}-ca"
+           - name: FABRIC_CA_SERVER_HOME
+             value: "/var/hyperledger/fabric-ca-server"
+           - name: FABRIC_CA_SERVER_TLS_CERTFILE
+             value: "/var/hyperledger/fabric/config/tls/tls.crt"
+           - name: FABRIC_CA_SERVER_TLS_KEYFILE
+             value: "/var/hyperledger/fabric/config/tls/tls.key"
+           - name: FABRIC_CA_CLIENT_HOME
+             value: "/var/hyperledger/fabric-ca-client"
+
           volumeMounts:
             - name: data
-              mountPath: /etc/hyperledger/fabric-ca-server
-              subPath: orgs/fabric-ca/${ORG_NAME}
+              mountPath: /var/hyperledger
+              subPath: orgs/${ORG_TYPE}-orgs/${ORG_NAME}/ca
+
+            - name: fabric-config
+              mountPath: /var/hyperledger/fabric-ca-server/fabric-ca-server-config.yaml
+              subPath: fabric-ca-server-config.yaml
+
+            - name: tls-cert-volume
+              mountPath: /var/hyperledger/fabric/config/tls
+              readOnly: true
+
