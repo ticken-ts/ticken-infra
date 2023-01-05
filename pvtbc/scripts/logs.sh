@@ -16,8 +16,8 @@ function logging_init() {
 
 function log_title() {
   local message=$1
-  echo "************* ${message} *************"
-  echo "************* ${message} *************" 1>&3 2>&4
+  echo "************* ${message} ************* \n"
+  echo "************* ${message} ************* \n" 1>&3 2>&4
 }
 
 function log_op() {

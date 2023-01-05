@@ -32,8 +32,7 @@ function _kind_init() {
 
   # prevent the next kind cluster from using the previous Fabric network's enrollments.
   rm -rf ${CLUSTER_VOLUME_PATH}
-  kind delete cluster --name $CLUSTER_NAME
-  mkdir -p $CLUSTER_VOLUME_PATH
+  mkdir -p ${CLUSTER_VOLUME_PATH}
 
   local host_volume_path=${CLUSTER_VOLUME_PATH}
 
@@ -147,13 +146,13 @@ function _apply_cert_manager() {
 function _kind_load_docker_images() {
   push_step "loading docker images"
 
-  pull_image_if_not_present ${FABRIC_CCAAS_BUILDER_IMAGE}
-  pull_image_if_not_present ${FABRIC_CA_TOOLS_IMAGE}
-  pull_image_if_not_present ${FABRIC_ORDERER_IMAGE}
-  pull_image_if_not_present ${FABRIC_TOOLS_IMAGE}
-  pull_image_if_not_present ${FABRIC_PEER_IMAGE}
-  pull_image_if_not_present ${FABRIC_CA_IMAGE}
-  pull_image_if_not_present ${COUCHDB_IMAGE}
+  pull_image_if_not_present ${FABRIC_CCAAS_BUILDER_IMAGE} "FABRIC_CCAAS_BUILDER_IMAGE"
+  pull_image_if_not_present ${FABRIC_CA_TOOLS_IMAGE} "FABRIC_CA_TOOLS_IMAGE"
+  pull_image_if_not_present ${FABRIC_ORDERER_IMAGE} "FABRIC_ORDERER_IMAGE"
+  pull_image_if_not_present ${FABRIC_TOOLS_IMAGE} "FABRIC_TOOLS_IMAGE"
+  pull_image_if_not_present ${FABRIC_PEER_IMAGE} "FABRIC_PEER_IMAGE"
+  pull_image_if_not_present ${FABRIC_CA_IMAGE} "FABRIC_CA_IMAGE"
+  pull_image_if_not_present ${COUCHDB_IMAGE} "COUCHDB_IMAGE"
 
   kind load docker-image ${FABRIC_CCAAS_BUILDER_IMAGE} --name $CLUSTER_NAME
   kind load docker-image ${FABRIC_CA_TOOLS_IMAGE}      --name $CLUSTER_NAME

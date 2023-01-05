@@ -1,9 +1,16 @@
 function pull_image_if_not_present() {
   local image=$1
 
-  if [[ "$($CONTAINERS_CLI
-   images -q ${image} 2> /dev/null)" == "" ]]; then
+  local image_cache_name=$2
+  local image_cache_path="../images"
+
+  if [ -f ${image_cache_path}/${image_cache_name}.tar ]; then
+    $CONTAINERS_CLI load < ${image_cache_path}/${image_cache_name}.tar
+
+  elif [[ "$($CONTAINERS_CLI images -q ${image} 2> /dev/null)" == "" ]]; then
+    mkdir -p ${image_cache_path}
     $CONTAINERS_CLI pull ${image}
+    $CONTAINERS_CLI save ${image} > ${image_cache_path}/${image_cache_name}.tar
   fi
 }
 

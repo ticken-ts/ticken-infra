@@ -17,13 +17,6 @@ spec:
         - name: generate-certs
           image: ${FABRIC_TOOLS_IMAGE}
           workingDir: /
-          resources:
-            requests:
-              memory: "300Mi"
-              cpu: "300m"
-            limits:
-              memory: "500Mi"
-              cpu: "350m"
           volumeMounts:
             - mountPath: /orgs
               name: fabric-files
