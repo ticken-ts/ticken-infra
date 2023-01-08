@@ -7,7 +7,7 @@ function deploy_chaincode() {
     local cc_path=$(get_folder_full_path $5)
 
     _prepare_chaincode_image ${cc_path} ${cc_name}
-    install_chaincode $cc_name org_name
+    install_chaincode ${cc_name} ${org_name}
     _activate_chaincode ${channel_name} ${org_name} "peer0" ${orderer_org_name} ${CHAINCODE_ID} ${cc_name}
 }
 

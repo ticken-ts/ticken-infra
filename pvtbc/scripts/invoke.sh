@@ -1,5 +1,5 @@
 NODE_NUM=0
-ORG_NAME="org1"
+ORG_NAME="org3"
 ORG_NODE="peer$NODE_NUM"
 CLUSTER_VOLUME_PATH="/tmp/ticken-pv"
 
@@ -19,18 +19,19 @@ export CORE_PEER_TLS_ROOTCERT_FILE=${CLUSTER_VOLUME_PATH}/orgs/peer-orgs/${ORG_N
 
 COMMAND='{"Function":"Create","Args":["event-id-2", "event-name-2", "2022-12-12T15:04:05Z"]}'
 
-#../bin/peer chaincode invoke \
-#  --name         $CC_NAME \
-#  --channelID    $CHANNEL_NAME \
-#  --ctor         "${COMMAND}" \
-#  --orderer      $ORDERER_ENDPOINT \
-#  --tls --cafile $ORDERER_CAFILE
+echo
+/Users/facundotorraca/Documents/ticken/ticken-dev/test-pvtbc/test-network-k8s/bin/peer chaincode invoke \
+  --name         $CC_NAME \
+  --channelID    $CHANNEL_NAME \
+  --ctor         "${COMMAND}" \
+  --orderer      $ORDERER_ENDPOINT \
+  --tls --cafile $ORDERER_CAFILE
 
 
 #../bin/peer channel list \
 # --orderer $ORDERER_ENDPOINT \
 # --tls --cafile ORDERER_CAFILE
 
-/Users/facundotorraca/Documents/ticken/ticken-dev/test-pvtbc/test-network-k8s/bin/peer lifecycle chaincode queryinstalled \
-  --orderer $ORDERER_ENDPOINT \
-  --tls --cafile ORDERER_CAFILE
+#/Users/facundotorraca/Documents/ticken/ticken-dev/test-pvtbc/test-network-k8s/bin/peer lifecycle chaincode queryinstalled \
+#  --orderer $ORDERER_ENDPOINT \
+#  --tls --cafile ORDERER_CAFILE
