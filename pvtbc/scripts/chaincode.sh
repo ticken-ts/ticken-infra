@@ -6,15 +6,24 @@ function deploy_chaincode() {
     local cc_name=$4
     local cc_path=$(get_folder_full_path $5)
 
-    local cc_package_path="$CLUSTER_VOLUME_PATH/chaincodes/${org_name}/${cc_name}.tgz"
-
     _prepare_chaincode_image ${cc_path} ${cc_name}
-    _package_ccaas_chaincode ${cc_name} ${cc_package_path} ${org_name}
-
-    _set_chaincode_id ${cc_package_path}
-    _launch_chaincode_service ${org_name} ${cc_name} ${CHAINCODE_ID} ${CHAINCODE_IMAGE}
-
+    install_chaincode $cc_name org_name
     _activate_chaincode ${channel_name} ${org_name} "peer0" ${orderer_org_name} ${CHAINCODE_ID} ${cc_name}
+}
+
+function install_chaincode() {
+  local cc_name=$1
+  local org_name=$2
+
+  local cc_image_url="localhost:${LOCAL_REGISTRY_PORT}/${cc_name}"
+  local cc_package_path="$CLUSTER_VOLUME_PATH/chaincodes/${org_name}/${cc_name}.tgz"
+
+  _package_ccaas_chaincode ${cc_name} ${cc_package_path} ${org_name}
+
+  _set_chaincode_id ${cc_package_path}
+  _launch_chaincode_service ${org_name} ${cc_name} ${CHAINCODE_ID} ${cc_image_url}
+
+  _install_chaincode ${cc_name} ${org_name} "peer0"
 }
 
 # Prepare a chaincode image for use in a builder package.
@@ -26,8 +35,6 @@ function _prepare_chaincode_image() {
 
   __build_chaincode_image $cc_folder $cc_name
   __publish_chaincode_image $cc_url $cc_name
-
-  export CHAINCODE_IMAGE=$cc_url
 }
 
 function __build_chaincode_image() {
@@ -129,6 +136,18 @@ function _launch_chaincode_service() {
   pop_step
 }
 
+function _install_chaincode() {
+  export CHAINCODE_NAME=$1
+  export ORG_NAME=$2
+  export ORG_NODE=$3
+
+  push_step "installing chaincode in peer $ORG_NODE"
+
+  kube_apply_template "$K8S_ORG_JOBS_PATH/install-chaincode-job.yaml" $CLUSTER_NAMESPACE
+  kube_wait_until_job_completed "$K8S_ORG_JOBS_PATH/install-chaincode-job.yaml" $CLUSTER_NAMESPACE
+
+  pop_step
+}
 
 function _activate_chaincode() {
   export CHANNEL_NAME=$1

@@ -27,18 +27,12 @@ function bootstrap_peer_org() {
     join_channel $TICKEN_CHANNEL_NAME $org_name $ORDERER_ORG_NAME
     log_op "Channel joined"
 
-    log_op "Deploying contract $TICKEN_EVENT_CHAINCODE_NAME in $org_name"
-    deploy_chaincode \
-      $TICKEN_CHANNEL_NAME \
-      $org_name $ORDERER_ORG_NAME \
-      $TICKEN_EVENT_CHAINCODE_NAME $TICKEN_EVENT_CHAINCODE_PATH
+    log_op "Installing contract $TICKEN_EVENT_CHAINCODE_NAME in $org_name"
+    install_chaincode $TICKEN_EVENT_CHAINCODE_NAME $org_name
     log_op "$TICKEN_EVENT_CHAINCODE_NAME deployed"
 
-    log_op "Deploying contract $TICKEN_TICKET_CHAINCODE_NAME in $org_name"
-    deploy_chaincode \
-      $TICKEN_CHANNEL_NAME \
-      $org_name $ORDERER_ORG_NAME \
-      $TICKEN_TICKET_CHAINCODE_NAME $TICKEN_TICKET_CHAINCODE_PATH
+    log_op "Installing contract $TICKEN_TICKET_CHAINCODE_NAME in $org_name"
+    install_chaincode $TICKEN_TICKET_CHAINCODE_NAME $org_name
     log_op "$TICKEN_TICKET_CHAINCODE_NAME deployed"
 }
 

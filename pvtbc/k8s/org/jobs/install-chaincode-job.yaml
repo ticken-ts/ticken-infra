@@ -1,0 +1,46 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: install-chaincode-${CHAINCODE_NAME}-${ORG_NAME}-${ORG_NODE}
+spec:
+  parallelism: 1
+  completions: 1
+  template:
+    metadata:
+      name: create-certs
+    spec:
+      volumes:
+        - name: fabric-files
+          persistentVolumeClaim:
+            claimName: common-pvc
+
+        - name: fabric-config
+          configMap:
+            name: ${ORG_NAME}-config
+
+      containers:
+        - name: activate-chaincode
+          image: ${FABRIC_TOOLS_IMAGE}
+          workingDir: /
+
+          volumeMounts:
+            - mountPath: /orgs
+              name: fabric-files
+              subPath: orgs
+
+            - mountPath: /scripts
+              name: fabric-files
+              subPath: scripts
+
+            - mountPath: /chaincodes
+              name: fabric-files
+              subPath: chaincodes
+
+            - mountPath: /config
+              name: fabric-config
+          command:
+            - /bin/sh
+            - -c
+            - |
+              ./scripts/chaincode/install-chaincode.sh ${CHAINCODE_NAME} ${ORG_NAME} ${ORG_NODE}
+      restartPolicy: Never
