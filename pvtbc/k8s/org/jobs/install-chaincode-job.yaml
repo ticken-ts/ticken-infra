@@ -41,6 +41,5 @@ spec:
           command:
             - /bin/sh
             - -c
-            - |
-              ./scripts/chaincode/install-chaincode.sh ${CHAINCODE_NAME} ${ORG_NAME} ${ORG_NODE}
+            - ./scripts/chaincode/install-chaincode.sh ${CHANNEL_NAME} ${ORG_NAME} ${ORG_NODE} ${ORDERER_ORG_NAME} ${CHAINCODE_ID} ${CHAINCODE_NAME}
       restartPolicy: Never

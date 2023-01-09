@@ -4,9 +4,12 @@
 # and installing the chaincode out of band, and a single target to complete the peer
 # chaincode lifecycle.
 
-CHAINCODE_NAME=$1
+CHANNEL_NAME=$1
 ORG_NAME=$2
 ORG_NODE=$3
+ORDERER_ORG_NAME=$4
+CHAINCODE_ID=$5
+CHAINCODE_NAME=$6
 
 CHAINCODE_PACKAGE_PATH="/chaincodes/${ORG_NAME}/${CHAINCODE_NAME}.tgz"
 
@@ -19,3 +22,12 @@ export CORE_PEER_TLS_ROOTCERT_FILE=/orgs/peer-orgs/${ORG_NAME}/msp/tlscacerts/tl
 
 # install the chaincode
 peer lifecycle chaincode install ${CHAINCODE_PACKAGE_PATH}
+
+peer lifecycle chaincode approveformyorg \
+  --channelID     ${CHANNEL_NAME} \
+  --name          ${CHAINCODE_NAME} \
+  --package-id    ${CHAINCODE_ID} \
+  --version       1 \
+  --sequence      1 \
+  --orderer       ${ORDERER_ORG_NAME}-orderer0:7050 \
+  --tls --cafile   /orgs/orderer-orgs/${ORDERER_ORG_NAME}/nodes/${ORDERER_ORG_NAME}-orderer0/tls/signcerts/tls-cert.pem

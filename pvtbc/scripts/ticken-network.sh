@@ -19,27 +19,37 @@ function bootstrap_peer_org() {
 
     log_op "Deploying org: $org_name"
     deploy_org $org_name $PEER_ORG_TYPE
-    log_op "Deployed org: $org_name"
+    log_op "Deployed org: $org_name \n"
 
     _rename_privs
 
+    log_op "Updating channel: $CHANNEL_NAME"
+    org_join_channel $TICKEN_CHANNEL_NAME $org_name $GENESIS_ORG_NAME $ORDERER_ORG_NAME
+    log_op "Channel updated \n"
+
     log_op "Joining channel: $CHANNEL_NAME"
-    join_channel $TICKEN_CHANNEL_NAME $org_name $ORDERER_ORG_NAME
-    log_op "Channel joined"
+    org_peers_join_channel $TICKEN_CHANNEL_NAME $org_name $ORDERER_ORG_NAME
+    log_op "Channel joined \n"
 
-    log_op "Installing contract $TICKEN_EVENT_CHAINCODE_NAME in $org_name"
-    install_chaincode $TICKEN_EVENT_CHAINCODE_NAME $org_name
-    log_op "$TICKEN_EVENT_CHAINCODE_NAME deployed"
+    log_op "Deploying contract $TICKEN_EVENT_CHAINCODE_NAME in $org_name"
+    install_chaincode \
+      $TICKEN_CHANNEL_NAME \
+      $org_name $ORDERER_ORG_NAME \
+      $TICKEN_EVENT_CHAINCODE_NAME $TICKEN_EVENT_CHAINCODE_PATH
+    log_op "$TICKEN_EVENT_CHAINCODE_NAME deployed \n"
 
-    log_op "Installing contract $TICKEN_TICKET_CHAINCODE_NAME in $org_name"
-    install_chaincode $TICKEN_TICKET_CHAINCODE_NAME $org_name
-    log_op "$TICKEN_TICKET_CHAINCODE_NAME deployed"
+    log_op "Deploying contract $TICKEN_TICKET_CHAINCODE_NAME in $org_name"
+    install_chaincode \
+      $TICKEN_CHANNEL_NAME \
+      $org_name $ORDERER_ORG_NAME \
+      $TICKEN_TICKET_CHAINCODE_NAME $TICKEN_TICKET_CHAINCODE_PATH
+    log_op "$TICKEN_TICKET_CHAINCODE_NAME deployed \n"
 }
 
 function bootstrap() {
   log_op "Starting cluster"
   ticken_cluster_init
-  log_op "Cluster running"
+  log_op "Cluster running \n"
 
   log_op "Deploying org: $ORDERER_ORG_NAME"
   deploy_org $ORDERER_ORG_NAME $ORDERER_ORG_TYPE
@@ -55,19 +65,23 @@ function bootstrap() {
   create_channel $TICKEN_CHANNEL_NAME $ORDERER_ORG_NAME
   log_op "Channel created: $TICKEN_CHANNEL_NAME \n"
 
-  log_op "Joining channel: $CHANNEL_NAME"
-  join_channel $TICKEN_CHANNEL_NAME $GENESIS_ORG_NAME $ORDERER_ORG_NAME
+  # the genesis org no need to join the channel
+  # because it's definition is in the initial channel
+  # configuration
+
+  log_op "Joining channel: $TICKEN_CHANNEL_NAME"
+  org_peers_join_channel $TICKEN_CHANNEL_NAME $GENESIS_ORG_NAME $ORDERER_ORG_NAME
   log_op "Channel joined \n"
 
-  log_op "Deploying contract $TICKEN_EVENT_CHAINCODE_NAME in $org_name"
-  deploy_chaincode \
+  log_op "Deploying contract $TICKEN_EVENT_CHAINCODE_NAME in $GENESIS_ORG_NAME"
+  deploy_new_chaincode \
     $TICKEN_CHANNEL_NAME \
     $GENESIS_ORG_NAME $ORDERER_ORG_NAME \
     $TICKEN_EVENT_CHAINCODE_NAME $TICKEN_EVENT_CHAINCODE_PATH
   log_op "$TICKEN_EVENT_CHAINCODE_NAME deployed \n"
 
-  log_op "Deploying contract $TICKEN_TICKET_CHAINCODE_NAME in $org_name"
-  deploy_chaincode \
+  log_op "Deploying contract $TICKEN_TICKET_CHAINCODE_NAME in $GENESIS_ORG_NAME"
+  deploy_new_chaincode \
     $TICKEN_CHANNEL_NAME \
     $GENESIS_ORG_NAME $ORDERER_ORG_NAME \
     $TICKEN_TICKET_CHAINCODE_NAME $TICKEN_TICKET_CHAINCODE_PATH

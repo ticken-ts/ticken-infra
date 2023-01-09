@@ -1,13 +1,13 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: activate-chaincode-${CHAINCODE_NAME}-${ORG_NAME}
+  name: org-join-channel-${CHANNEL_NAME}-${JOINING_ORG_NAME}
 spec:
   parallelism: 1
   completions: 1
   template:
     metadata:
-      name: create-certs
+      name: join-channel-${CHANNEL_NAME}-${JOINING_ORG_NAME}
     spec:
       volumes:
         - name: fabric-files
@@ -16,10 +16,9 @@ spec:
 
         - name: fabric-config
           configMap:
-            name: ${ORG_NAME}-config
-
+            name: ${JOINING_ORG_NAME}-config
       containers:
-        - name: activate-chaincode
+        - name: generate-certs
           image: ${FABRIC_TOOLS_IMAGE}
           workingDir: /
 
@@ -32,14 +31,14 @@ spec:
               name: fabric-files
               subPath: scripts
 
-            - mountPath: /chaincodes
+            - mountPath: /channel-artifacts
               name: fabric-files
-              subPath: chaincodes
+              subPath: channel-artifacts
 
             - mountPath: /config
               name: fabric-config
           command:
             - /bin/sh
             - -c
-            - ./scripts/chaincode/activate-chaincode.sh ${CHANNEL_NAME} ${ORG_NAME} ${ORG_NODE} ${ORDERER_ORG_NAME} ${CHAINCODE_ID} ${CHAINCODE_NAME}
+            - ./scripts/channel/org-join-channel.sh ${CHANNEL_NAME} ${JOINING_ORG_NAME} ${GENESIS_ORG_NAME} ${ORDERER_ORG_NAME}
       restartPolicy: Never

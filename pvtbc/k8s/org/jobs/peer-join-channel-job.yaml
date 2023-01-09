@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: join-channel-${CHANNEL_NAME}-${JOINING_ORG_NAME}
+  name: org-node-join-channel-${CHANNEL_NAME}-${JOINING_ORG_NAME}-${JOINING_ORG_NODE}
 spec:
   parallelism: 1
   completions: 1

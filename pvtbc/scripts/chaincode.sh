@@ -1,4 +1,4 @@
-function deploy_chaincode() {
+function deploy_new_chaincode() {
     local channel_name=$1
     local org_name=$2
     local orderer_org_name=$3
@@ -7,13 +7,15 @@ function deploy_chaincode() {
     local cc_path=$(get_folder_full_path $5)
 
     _prepare_chaincode_image ${cc_path} ${cc_name}
-    install_chaincode ${cc_name} ${org_name}
+    install_chaincode  ${channel_name} ${org_name} ${orderer_org_name} ${cc_name}
     _activate_chaincode ${channel_name} ${org_name} "peer0" ${orderer_org_name} ${CHAINCODE_ID} ${cc_name}
 }
 
 function install_chaincode() {
-  local cc_name=$1
+  local channel_name=$1
   local org_name=$2
+  local orderer_org_name=$3
+  local cc_name=$4
 
   local cc_image_url="localhost:${LOCAL_REGISTRY_PORT}/${cc_name}"
   local cc_package_path="$CLUSTER_VOLUME_PATH/chaincodes/${org_name}/${cc_name}.tgz"
@@ -23,7 +25,7 @@ function install_chaincode() {
   _set_chaincode_id ${cc_package_path}
   _launch_chaincode_service ${org_name} ${cc_name} ${CHAINCODE_ID} ${cc_image_url}
 
-  _install_chaincode ${cc_name} ${org_name} "peer0"
+  _install_chaincode ${channel_name} ${org_name} "peer0" ${orderer_org_name} ${CHAINCODE_ID} ${cc_name}
 }
 
 # Prepare a chaincode image for use in a builder package.
@@ -137,9 +139,14 @@ function _launch_chaincode_service() {
 }
 
 function _install_chaincode() {
-  export CHAINCODE_NAME=$1
+  export CHANNEL_NAME=$1
+
   export ORG_NAME=$2
   export ORG_NODE=$3
+  export ORDERER_ORG_NAME=$4
+
+  export CHAINCODE_ID=$5
+  export CHAINCODE_NAME=$6
 
   push_step "installing chaincode in peer $ORG_NODE"
 
