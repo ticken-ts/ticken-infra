@@ -71,6 +71,14 @@ spec:
             - name: CORE_PEER_TLS_ENABLED
               value: "true"
 
+            - name: CORE_PEER_GOSSIP_BOOTSTRAP
+              value: ${ORG_NAME}-${ORG_NODE}:7051
+            - name: CORE_PEER_GOSSIP_EXTERNALENDPOINT
+              value: ${ORG_NAME}-${ORG_NODE}:7051
+
+            - name: CHAINCODE_AS_A_SERVICE_BUILDER_CONFIG
+              value: "{\"peername\":\"${ORG_NAME}${ORG_NODE}\"}"
+
             - name: CORE_PEER_TLS_CERT_FILE
               value: /var/hyperledger/fabric/config/tls/tls.crt
             - name: CORE_PEER_TLS_KEY_FILE
