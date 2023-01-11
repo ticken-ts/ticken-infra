@@ -17,14 +17,15 @@ export CORE_PEER_MSPCONFIGPATH=${CLUSTER_VOLUME_PATH}/orgs/peer-orgs/${ORG_NAME}
 export CORE_PEER_TLS_ROOTCERT_FILE=${CLUSTER_VOLUME_PATH}/orgs/peer-orgs/${ORG_NAME}/msp/tlscacerts/tlsca-signcert.pem
 
 
-COMMAND='{"Function":"Create","Args":["test-event-id", "event-name", "2022-12-12T15:04:05Z"]}'
+#COMMAND='{"Function":"Create","Args":["test-event-id-2", "event-name-1", "2022-12-12T15:04:05Z"]}'
+COMMAND='{"Function":"Get","Args":["test-event-id-1"]}'
 
-/Users/facundotorraca/Documents/ticken/ticken-dev/test-pvtbc/test-network-k8s/bin/peer chaincode invoke \
-  --name         $CC_NAME \
-  --channelID    $CHANNEL_NAME \
-  --ctor         "${COMMAND}" \
-  --orderer      $ORDERER_ENDPOINT \
-  --tls --cafile $ORDERER_CAFILE
+#/Users/facundotorraca/Documents/ticken/ticken-dev/test-pvtbc/test-network-k8s/bin/peer chaincode invoke \
+#  --name         $CC_NAME \
+#  --channelID    $CHANNEL_NAME \
+#  --ctor         "${COMMAND}" \
+#  --orderer      $ORDERER_ENDPOINT \
+#  --tls --cafile $ORDERER_CAFILE
 
 #/Users/facundotorraca/Documents/ticken/ticken-dev/test-pvtbc/test-network-k8s/bin/peer channel list \
 # --orderer $ORDERER_ENDPOINT \
