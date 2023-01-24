@@ -5,7 +5,7 @@ function pull_image_if_not_present() {
   local image_cache_path="../images"
 
   if [ -f ${image_cache_path}/${image_cache_name}.tar ]; then
-      $CONTAINERS_CLI load < ${image_cache_path}/${image_cache_name}.tar
+    $CONTAINERS_CLI load < ${image_cache_path}/${image_cache_name}.tar
   else
     mkdir -p ${image_cache_path}
     $CONTAINERS_CLI pull ${image}

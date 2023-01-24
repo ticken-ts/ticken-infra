@@ -1,11 +1,12 @@
 export FABRIC_CFG_PATH=${PWD}configtx
 
 CHANNEL_NAME=$1
-ORDERER_ORG_NAME=$2
+NETWORK_PROFILE=$2
+ORDERER_ORG_NAME=$3
 
 # generate channel genesis block
 configtxgen \
-  -profile TickenNetworkGenesis \
+  -profile ${NETWORK_PROFILE} \
   -channelID ${CHANNEL_NAME} \
   -outputBlock ./channel-artifacts/${CHANNEL_NAME}_genesis_block.pb
 

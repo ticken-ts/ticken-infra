@@ -123,6 +123,7 @@ spec:
               readOnly: true
 
         - name: couchdb
+
           image: ${COUCHDB_IMAGE}
           env:
             - name: COUCHDB_USER
@@ -131,3 +132,7 @@ spec:
               value: adminpw
           ports:
             - containerPort: 5984
+          volumeMounts:
+            - name: fabric-files
+              mountPath: /opt/couchdb/data
+              subPath: couchdb/${ORG_NAME}/${ORG_NOME}

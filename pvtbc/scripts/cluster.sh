@@ -120,13 +120,6 @@ function _apply_nginx_ingress() {
   # kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.1.2/deploy/static/provider/cloud/deploy.yaml
 
   kubectl apply -f "$K8S_CLUSTER_FILES_PATH/ingress-nginx-kind.yaml"
-
-  # wait for nginx
-  #kubectl wait --namespace ingress-nginx \
-  #  --for=condition=ready pod \
-  #  --selector=app.kubernetes.io/component=controller \
-  #  --timeout=2m
-
   pop_step
 }
 
@@ -147,20 +140,25 @@ function _kind_load_docker_images() {
   push_step "loading docker images"
 
   pull_image_if_not_present ${FABRIC_CCAAS_BUILDER_IMAGE} "FABRIC_CCAAS_BUILDER_IMAGE"
-  pull_image_if_not_present ${FABRIC_CA_TOOLS_IMAGE} "FABRIC_CA_TOOLS_IMAGE"
-  pull_image_if_not_present ${FABRIC_ORDERER_IMAGE} "FABRIC_ORDERER_IMAGE"
-  pull_image_if_not_present ${FABRIC_TOOLS_IMAGE} "FABRIC_TOOLS_IMAGE"
-  pull_image_if_not_present ${FABRIC_PEER_IMAGE} "FABRIC_PEER_IMAGE"
-  pull_image_if_not_present ${FABRIC_CA_IMAGE} "FABRIC_CA_IMAGE"
-  pull_image_if_not_present ${COUCHDB_IMAGE} "COUCHDB_IMAGE"
-
   kind load docker-image ${FABRIC_CCAAS_BUILDER_IMAGE} --name $CLUSTER_NAME
-  kind load docker-image ${FABRIC_CA_TOOLS_IMAGE}      --name $CLUSTER_NAME
-  kind load docker-image ${FABRIC_ORDERER_IMAGE}       --name $CLUSTER_NAME
-  kind load docker-image ${FABRIC_TOOLS_IMAGE}         --name $CLUSTER_NAME
-  kind load docker-image ${FABRIC_PEER_IMAGE}          --name $CLUSTER_NAME
-  kind load docker-image ${FABRIC_CA_IMAGE}            --name $CLUSTER_NAME
-  kind load docker-image ${COUCHDB_IMAGE}              --name $CLUSTER_NAME
+
+  pull_image_if_not_present ${FABRIC_CA_TOOLS_IMAGE} "FABRIC_CA_TOOLS_IMAGE"
+  kind load docker-image ${FABRIC_CA_TOOLS_IMAGE} --name $CLUSTER_NAME
+
+  pull_image_if_not_present ${FABRIC_ORDERER_IMAGE} "FABRIC_ORDERER_IMAGE"
+  kind load docker-image ${FABRIC_ORDERER_IMAGE} --name $CLUSTER_NAME
+
+  pull_image_if_not_present ${FABRIC_TOOLS_IMAGE} "FABRIC_TOOLS_IMAGE"
+  kind load docker-image ${FABRIC_TOOLS_IMAGE} --name $CLUSTER_NAME
+
+  pull_image_if_not_present ${FABRIC_PEER_IMAGE} "FABRIC_PEER_IMAGE"
+  kind load docker-image ${FABRIC_PEER_IMAGE} --name $CLUSTER_NAME
+
+  pull_image_if_not_present ${FABRIC_CA_IMAGE} "FABRIC_CA_IMAGE"
+  kind load docker-image ${FABRIC_CA_IMAGE} --name $CLUSTER_NAME
+
+  pull_image_if_not_present ${COUCHDB_IMAGE} "COUCHDB_IMAGE"
+  kind load docker-image ${COUCHDB_IMAGE} --name $CLUSTER_NAME
 
   pop_step
 }
@@ -169,7 +167,6 @@ function _copy_artifacts_to_volume() {
   push_step "copying artifact to cluster volume"
 
   cp -r "../k8s-artifacts/scripts"            "$CLUSTER_VOLUME_PATH/scripts"
-  cp -r "../k8s-artifacts/configtx"           "$CLUSTER_VOLUME_PATH/configtx"
   cp -r "../k8s-artifacts/connection-profile" "$CLUSTER_VOLUME_PATH/connection-profile"
 
   chmod -R 777 $CLUSTER_VOLUME_PATH

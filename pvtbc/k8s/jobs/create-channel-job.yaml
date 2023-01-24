@@ -13,6 +13,10 @@ spec:
         - name: fabric-files
           persistentVolumeClaim:
             claimName: common-pvc
+
+        - name: configtx
+          configMap:
+            name: ${CHANNEL_NAME}-config
       containers:
         - name: generate-certs
           image: ${FABRIC_TOOLS_IMAGE}
@@ -27,8 +31,7 @@ spec:
               subPath: scripts
 
             - mountPath: /configtx
-              name: fabric-files
-              subPath: configtx
+              name: configtx
 
             - mountPath: /channel-artifacts
               name: fabric-files
@@ -36,5 +39,5 @@ spec:
           command:
             - /bin/sh
             - -c
-            - ./scripts/channel/create-channel.sh ${CHANNEL_NAME} ${ORDERER_ORG_NAME}
+            - ./scripts/channel/create-channel.sh ${CHANNEL_NAME} ${NETWORK_PROFILE} ${ORDERER_ORG_NAME}
       restartPolicy: Never
