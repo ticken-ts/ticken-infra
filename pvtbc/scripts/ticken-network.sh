@@ -68,17 +68,17 @@ function bootstrap_peer_org() {
 }
 
 function bootstrap() {
-#  log_op "Starting cluster"
-#  ticken_cluster_init
-#  log_op "Cluster running \n"
-#
-#  log_op "Deploying org: $ORDERER_ORG_NAME"
-#  deploy_org $ORDERER_ORG_NAME $ORDERER_ORG_TYPE
-#  log_op "Deployed org: $ORDERER_ORG_NAME \n"
-#
-#  log_op "Deploying org: $GENESIS_ORG_NAME"
-#  deploy_org $GENESIS_ORG_NAME $PEER_ORG_TYPE
-#  log_op "Deployed org: $GENESIS_ORG_NAME \n"
+  log_op "Starting cluster"
+  ticken_cluster_init
+  log_op "Cluster running \n"
+
+  log_op "Deploying org: $ORDERER_ORG_NAME"
+  deploy_org $ORDERER_ORG_NAME $ORDERER_ORG_TYPE
+  log_op "Deployed org: $ORDERER_ORG_NAME \n"
+
+  log_op "Deploying org: $GENESIS_ORG_NAME"
+  deploy_org $GENESIS_ORG_NAME $PEER_ORG_TYPE
+  log_op "Deployed org: $GENESIS_ORG_NAME \n"
 
   log_op "Preparing chaincode images"
   prepare_chaincode_image $TICKEN_EVENT_CHAINCODE_NAME $TICKEN_EVENT_CHAINCODE_PATH
