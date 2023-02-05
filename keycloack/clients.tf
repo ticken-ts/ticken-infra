@@ -30,6 +30,7 @@ resource "keycloak_openid_client" "postman_attendant_app" {
 
   access_type                  = "PUBLIC"
   standard_flow_enabled = true
+  direct_access_grants_enabled = true
   valid_redirect_uris = [
     "exp://*"
   ]
@@ -89,6 +90,7 @@ resource "keycloak_openid_client" "postman_organizer_app" {
 
   access_type                  = "PUBLIC"
   standard_flow_enabled = true
+  direct_access_grants_enabled = true
   
   valid_redirect_uris = [
     "http://localhost:5173/*"
