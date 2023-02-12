@@ -1,0 +1,40 @@
+#kc-header-wrapper {
+    display: none;
+}
+
+ #kc-page-title {
+     font-family: "Rubik Light", sans-serif;
+     text-align: center;
+ }
+
+
+ body {
+     font-family: "Rubik Light", sans-serif;
+ }
+
+ .login-pf body {
+        background: url("../img/bg-login.jpg") no-repeat center center fixed;");
+ }
+
+ .card-pf {
+     max-width: 768px;
+     margin: 0 auto;
+ }
+
+ .login-pf-page {
+     display: flex;
+     flex-direction: column;
+     height: 100vh;
+     align-items: stretch;
+     justify-content: center;
+ }
+
+ #kc-form-buttons .btn-lg {
+     background-color: mediumpurple;
+ }
+
+
+ :is(input#password, input#password-confirm, input#username, input#email, input#firstName, input#lastName) {
+     border-radius: 50px;
+     border-color: mediumpurple;
+ }

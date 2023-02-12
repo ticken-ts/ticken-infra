@@ -2,6 +2,8 @@
 
 ## Keycloak
 
+The `keycloak-themes` folder contains the necessary theme to match the app/backoffice design, it must be mounted to `opt/keycloak/themes` (or copy the contents) when using the official keycloak docker image. If not using the docker image, read the keycloak docs to know where to copy the themes.
+
 To apply the keycloak configuration using terraform it is necessary to create a client for terraform inside the `master` realm, give the necessary permissions and copy the client secret:
 
 - Login into the admin page
@@ -13,6 +15,6 @@ To apply the keycloak configuration using terraform it is necessary to create a 
 - Go to the "service accounts roles" tab and click "assign role"
 - Enable all the roles and click "assign"
 - Go to the "credentials" tab and copy the client secret
-- On your terminal, go to the "keycloack" folder and input `terraform apply`
+- On your terminal, go to the "keycloak" folder and input `terraform apply`
 - Paste the previously copied client secret when prompted
-- Enter `yes`to confirm the changes
+- Enter `yes` to confirm the changes
