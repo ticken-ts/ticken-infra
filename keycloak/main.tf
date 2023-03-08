@@ -7,7 +7,11 @@ terraform {
   }
 }
 
-variable "keycloak_client_secret" {
+variable "keycloak_admin_username" {
+  type = string
+}
+
+variable "keycloak_admin_password" {
   type = string
 }
 
@@ -17,8 +21,9 @@ variable "keycloak_url" {
 }
 
 provider "keycloak" {
-    client_id     = "terraform"
+    client_id     = "admin-cli"
     url           = var.keycloak_url
-    client_secret = var.keycloak_client_secret
+    username      = var.keycloak_admin_username
+    password      = var.keycloak_admin_password
     base_path     = "" // required for new keycloak version
 }

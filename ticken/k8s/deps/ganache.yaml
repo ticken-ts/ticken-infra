@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ganache
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ticken-ganache
+
+  template:
+    metadata:
+      labels:
+        app: ticken-ganache
+
+    spec:
+      volumes:
+      containers:
+        - name: ticken-ganache
+          image: ${GANACHE_IMAGE}
+          args: ["ganache-cli --wallet.deterministic --wallet.totalAccounts 2"]
+          ports:
+            # access the web interface
+            - containerPort: 8545
+              name: websocket
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ganache-clusterip
+spec:
+  type: ClusterIP
+  selector:
+    app: ticken-ganache
+
+  ports:
+    - name: websocket
+      protocol: TCP
+      port: 8545
+      targetPort: 8545

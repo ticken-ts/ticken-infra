@@ -52,9 +52,9 @@ context K8S_ORG_NODES_PATH      "$K8S_BASE_PATH/org/nodes"
 
 
 #--------------------------- CLUSTER -----------------------------#
-context CLUSTER_VOLUME_PATH "/tmp/ticken-pv"
-context CLUSTER_NAMESPACE   "ticken-pvtbc-network"
-context CLUSTER_NAME        "ticken-pvtbc-network"
+context CLUSTER_VOLUME_PATH "/tmp/ticken/pvtbc-pv"
+context CLUSTER_NAMESPACE   "pvtbc"
+context CLUSTER_NAME        "pvtbc"
 context NGINX_HTTP_PORT     80
 context NGINX_HTTPS_PORT    443
 #-----------------------------------------------------------------#
@@ -62,10 +62,10 @@ context NGINX_HTTPS_PORT    443
 
 #------------------------- CONTAINERS ----------------------------#
 context CONTAINERS_CLI           "docker"
-context LOCAL_REGISTRY_NAME      kind-registry
+context LOCAL_REGISTRY_NAME      ticken-docker-registry
 context LOCAL_REGISTRY_INTERFACE 127.0.0.1
 context LOCAL_REGISTRY_PORT      5000
-context LOCAL_REGITRY_STORAGE    "/tmp/ticken-registry"
+context LOCAL_REGITRY_STORAGE    "/tmp/ticken/registry"
 #-----------------------------------------------------------------#
 
 

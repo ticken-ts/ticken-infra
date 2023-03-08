@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ticken-validator-service-mongodb
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: ticken-validator-service-mongodb
+
+  template:
+    metadata:
+      labels:
+        app: ticken-validator-service-mongodb
+
+    spec:
+      volumes:
+        - name: ticken-validator-service-mongodb-volume
+          persistentVolumeClaim:
+            claimName: common-pvc
+
+      containers:
+        - name: ticken-validator-service-mongodb
+          image: ${MONGODB_IMAGE}
+          ports:
+            - containerPort: 27017
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              value: "admin"
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              value: "admin"
+
+          volumeMounts:
+            - name: ticken-validator-service-mongodb-volume
+              mountPath: /data/db
+              subPath: ticken-validator-service/db
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: validator-service-mongodb-clusterip
+
+spec:
+  type: ClusterIP
+  selector:
+    app: ticken-validator-service-mongodb
+
+  ports:
+    - name: ticken-validator-service-mongodb
+      protocol: TCP
+      port: 27017
+      targetPort: 27017

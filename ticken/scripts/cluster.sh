@@ -23,8 +23,8 @@ function _launch_docker_registry() {
 }
 
 function _stop_docker_registry() {
-  docker kill kind-registry || true
-  docker rm kind-registry   || true
+  docker kill ticken-kind-registry || true
+  docker rm ticken-kind-registry   || true
 }
 
 function _kind_init() {
@@ -139,26 +139,17 @@ function _apply_cert_manager() {
 function _kind_load_docker_images() {
   push_step "loading docker images"
 
-  pull_image_if_not_present ${FABRIC_CCAAS_BUILDER_IMAGE} "FABRIC_CCAAS_BUILDER_IMAGE"
-  kind load docker-image ${FABRIC_CCAAS_BUILDER_IMAGE} --name $CLUSTER_NAME
+  pull_image_if_not_present $MONGODB_IMAGE "MONGODB_IMAGE"
+  kind load docker-image ${MONGODB_IMAGE} --name $CLUSTER_NAME
 
-  pull_image_if_not_present ${FABRIC_CA_TOOLS_IMAGE} "FABRIC_CA_TOOLS_IMAGE"
-  kind load docker-image ${FABRIC_CA_TOOLS_IMAGE} --name $CLUSTER_NAME
+  pull_image_if_not_present $RABBITMQ_IMAGE "RABBITMQ_IMAGE"
+  kind load docker-image ${RABBITMQ_IMAGE} --name $CLUSTER_NAME
 
-  pull_image_if_not_present ${FABRIC_ORDERER_IMAGE} "FABRIC_ORDERER_IMAGE"
-  kind load docker-image ${FABRIC_ORDERER_IMAGE} --name $CLUSTER_NAME
+  pull_image_if_not_present $KEYCLOAK_IMAGE "KEYCLOAK_IMAGE"
+  kind load docker-image ${KEYCLOAK_IMAGE} --name $CLUSTER_NAME
 
-  pull_image_if_not_present ${FABRIC_TOOLS_IMAGE} "FABRIC_TOOLS_IMAGE"
-  kind load docker-image ${FABRIC_TOOLS_IMAGE} --name $CLUSTER_NAME
-
-  pull_image_if_not_present ${FABRIC_PEER_IMAGE} "FABRIC_PEER_IMAGE"
-  kind load docker-image ${FABRIC_PEER_IMAGE} --name $CLUSTER_NAME
-
-  pull_image_if_not_present ${FABRIC_CA_IMAGE} "FABRIC_CA_IMAGE"
-  kind load docker-image ${FABRIC_CA_IMAGE} --name $CLUSTER_NAME
-
-  pull_image_if_not_present ${COUCHDB_IMAGE} "COUCHDB_IMAGE"
-  kind load docker-image ${COUCHDB_IMAGE} --name $CLUSTER_NAME
+  pull_image_if_not_present $GANACHE_IMAGE "GANACHE_IMAGE"
+  kind load docker-image ${GANACHE_IMAGE} --name $CLUSTER_NAME
 
   pop_step
 }
@@ -166,8 +157,8 @@ function _kind_load_docker_images() {
 function _copy_artifacts_to_volume() {
   push_step "copying artifact to cluster volume"
 
-  cp -r "../k8s-artifacts/scripts"            "$CLUSTER_VOLUME_PATH/scripts"
-  cp -r "../k8s-artifacts/connection-profile" "$CLUSTER_VOLUME_PATH/connection-profile"
+  cp -r "$K8S_ARTIFACTS_PATH/keycloak-themes" "$CLUSTER_VOLUME_PATH/keycloak-themes"
+  cp -r "/tmp/ticken/pvtbc-pv/orgs/peer-orgs" "$CLUSTER_VOLUME_PATH/orgs"
 
   chmod -R 777 $CLUSTER_VOLUME_PATH
 
