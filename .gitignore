@@ -37,3 +37,6 @@ w
 
 /ticken/images
 /ticken/logs
+
+.idea
+.DS_Store
