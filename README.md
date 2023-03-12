@@ -1,5 +1,9 @@
 # ticken-infra
 
+## Running Private blockchain
+
+## Running Ticken
+
 ## Keycloak
 
 The `keycloak-themes` folder contains the necessary theme to match the app/backoffice design, it must be mounted to `opt/keycloak/themes` (or copy the contents) when using the official keycloak docker image. If not using the docker image, read the keycloak docs to know where to copy the themes.

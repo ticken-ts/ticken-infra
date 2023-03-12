@@ -1,9 +1,9 @@
 {
   "server": {
-    "host": "localhost",
+    "host": "0.0.0.0",
     "port": 8000,
     "client_id": "ticken.ticket.service",
-    "identity_issuer": "http://keycloak-clusterip:8080/realms/attendants"
+    "identity_issuer": "http://keycloak-clusterip/realms/attendants"
   },
 
   "database": {
