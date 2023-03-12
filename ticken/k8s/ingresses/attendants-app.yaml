@@ -11,7 +11,7 @@ spec:
     - host: ticken.com # for testing only
       http:
         paths:
-          - path: /
+          - path: /api/t
             pathType: Prefix
             backend:
               service:
@@ -19,10 +19,10 @@ spec:
                 port:
                   number: 80
 
-          - path: /events
+          - path: /api/e
             pathType: Prefix
             backend:
               service:
-                name: ticket-service-clusterip
+                name: event-service-clusterip
                 port:
                   number: 80

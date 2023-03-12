@@ -11,7 +11,7 @@ spec:
     - host: ticken.organizers.com # for testing only
       http:
         paths:
-          - path: /api/tickets
+          - path: /api/e
             pathType: Prefix
             backend:
               service:
