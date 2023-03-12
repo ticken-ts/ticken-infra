@@ -4,6 +4,7 @@
 . utils.sh
 . cluster.sh
 . service.sh
+. ingress.sh
 
 # enables the "errexit" option, which causes the shell to exit
 # immediately if a command exits with a non-zero exit status.
@@ -17,18 +18,18 @@ function bootstrap() {
 #  log_op "Starting cluster"
 #  ticken_cluster_init
 #  log_op "Cluster running \n"
-
+#
 #  log_op "Deploying Keycloak"
 #  deploy_keycloak
 #  log_op "Keycloak deployed \n"
-
-  log_op "Deploying RabbitMQ"
-  deploy_rabbitmq
-  log_op "RabbitMQ deployed \n"
-
-  log_op "Deploying ganache"
-  deploy_ganache
-  log_op "Ganache deployed \n"
+#
+#  log_op "Deploying RabbitMQ"
+#  deploy_rabbitmq
+#  log_op "RabbitMQ deployed \n"
+#
+#  log_op "Deploying ganache"
+#  deploy_ganache
+#  log_op "Ganache deployed \n"
 
   log_op "Deploying $TICKEN_EVENT_SERVICE_NAME"
   deploy_service $TICKEN_EVENT_SERVICE_NAME $TICKEN_EVENT_SERVICE_PATH
@@ -41,6 +42,12 @@ function bootstrap() {
   log_op "Deploying $TICKEN_VALIDATOR_SERVICE_NAME"
   deploy_service $TICKEN_VALIDATOR_SERVICE_NAME $TICKEN_VALIDATOR_SERVICE_PATH
   log_op "Service deployed \n"
+
+  log_op "Deploying ingresses"
+  deploy_app_load_balancer $ATTENDANTS_APP
+  deploy_app_load_balancer $ORGANIZERS_APP
+  deploy_app_load_balancer $VALIDATORS_APP
+  log_op "Ingresses deployed"
 }
 
 function armaggedon() {

@@ -24,6 +24,10 @@ context TICKEN_TICKET_SERVICE_PATH  "../../../ticken-ticket-service"
 
 context TICKEN_VALIDATOR_SERVICE_NAME  "ticken-validator-service"
 context TICKEN_VALIDATOR_SERVICE_PATH  "../../../ticken-validator-service"
+
+context ATTENDANTS_APP "attendants-app"
+context ORGANIZERS_APP "organizers-app"
+context VALIDATORS_APP "validators-app"
 #-----------------------------------------------------------------#
 
 
@@ -40,6 +44,7 @@ context K8S_BASE_PATH  "../k8s"
 context K8S_CLUSTER_FILES_PATH  "$K8S_BASE_PATH/cluster"
 context K8S_SERVICE_PATH        "$K8S_BASE_PATH/services"
 context K8S_DEPS_PATH           "$K8S_BASE_PATH/deps"
+context K8S_INGRESSES_PATH      "$K8S_BASE_PATH/ingresses"
 
 context K8S_ARTIFACTS_PATH      "../artifacts"
 #-----------------------------------------------------------------#

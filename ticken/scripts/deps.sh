@@ -1,6 +1,6 @@
 function deploy_keycloak() {
   _deploy_dependency $KEYCLOAK_DEP_NAME
-  sleep 10 # wait 5 seconds until keycloak is ready
+  sleep 30 # wait 5 seconds until keycloak is ready
   _bootstrap_keycloak
 }
 
