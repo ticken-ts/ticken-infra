@@ -76,7 +76,7 @@ function _deploy_service_database() {
 
   # this must be executed only when creating the
   # cluster for development purposes
-  cat <<EOF | kubectl -n "${CLUSTER_NAMESPACE}-dev" apply -f -
+  cat <<EOF | kubectl -n "${CLUSTER_NAMESPACE}" apply -f -
 ---
 apiVersion: v1
 kind: Service
