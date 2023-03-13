@@ -62,10 +62,36 @@ function _load_service_config() {
 function _deploy_service_database() {
   local service_name=$1
 
-  push_step "$service_name - deploying database"
+  local db_port=0
+  case ${service_name} in
+    $TICKEN_EVENT_SERVICE_NAME) db_port=${TICKEN_EVENT_SERVICE_DB_LOCAL_PORT};;
+    $TICKEN_TICKET_SERVICE_NAME) db_port=${TICKEN_TICKET_SERVICE_DB_LOCAL_PORT};;
+    $TICKEN_VALIDATOR_SERVICE_NAME) db_port=${TICKEN_VALIDATOR_SERVICE_DB_LOCAL_PORT};;
+  esac
+
+  push_step "$service_name - deploying database - dev url 'mongodb://localhost:${db_port}'"
 
   kube_apply_template "$K8S_SERVICE_PATH/${service_name}/mongodb.yaml" $CLUSTER_NAMESPACE
   kubectl -n $CLUSTER_NAMESPACE rollout status deploy/"${service_name}-mongodb"
+
+  # this must be executed only when creating the
+  # cluster for development purposes
+  cat <<EOF | kubectl -n "${CLUSTER_NAMESPACE}-dev" apply -f -
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ${service_name}-mongodb-np
+spec:
+  type: NodePort
+  selector:
+    app: ${service_name}-mongodb
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 27017
+      nodePort: ${db_port}
+EOF
 
   pop_step
 }

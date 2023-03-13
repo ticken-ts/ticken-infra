@@ -74,3 +74,9 @@ context RABBITMQ_IMAGE "rabbitmq:3-management"
 context KEYCLOAK_IMAGE "quay.io/keycloak/keycloak:latest"
 context GANACHE_IMAGE  "trufflesuite/ganache-cli:latest"
 #-----------------------------------------------------------------#
+
+#----------------------------- DEV -------------------------------#
+context TICKEN_EVENT_SERVICE_DB_LOCAL_PORT     "30000"
+context TICKEN_TICKET_SERVICE_DB_LOCAL_PORT    "30001"
+context TICKEN_VALIDATOR_SERVICE_DB_LOCAL_PORT "30002"
+#-----------------------------------------------------------------#

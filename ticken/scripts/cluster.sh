@@ -42,6 +42,12 @@ function _kind_init() {
   local ingress_http_port=${NGINX_HTTP_PORT}
   local ingress_https_port=${NGINX_HTTPS_PORT}
 
+  # this ports are mapped only for development to access
+  # the databases locally without accessing the cluster
+  local event_service_db_local_port=${TICKEN_EVENT_SERVICE_DB_LOCAL_PORT}
+  local ticket_service_db_local_port=${TICKEN_TICKET_SERVICE_DB_LOCAL_PORT}
+  local validator_service_db_local_port=${TICKEN_VALIDATOR_SERVICE_DB_LOCAL_PORT}
+
   cat <<EOF | kind create cluster --name $CLUSTER_NAME --config=-
 ---
 kind: Cluster
@@ -67,6 +73,24 @@ nodes:
       - containerPort: 443
         hostPort: ${ingress_https_port}
         protocol: TCP
+
+        # mapping ports for development purposes
+        # to allow to map db
+      - containerPort: ${event_service_db_local_port}
+        hostPort: ${event_service_db_local_port}
+        listenAddress: "0.0.0.0"
+        protocol: TCP
+
+      - containerPort: ${ticket_service_db_local_port}
+        hostPort: ${ticket_service_db_local_port}
+        listenAddress: "0.0.0.0"
+        protocol: TCP
+
+      - containerPort: ${validator_service_db_local_port}
+        hostPort: ${validator_service_db_local_port}
+        listenAddress: "0.0.0.0"
+        protocol: TCP
+
 
 # create a cluster with the local registry enabled in containerd
 containerdConfigPatches:
