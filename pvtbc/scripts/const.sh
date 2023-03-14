@@ -4,7 +4,7 @@
 function context() {
   local name=$1
   local default_value=$2
-  local override_name=TICKEN_NETWORK_${name}
+  local override_name=PVTBC_${name}
 
   export ${name}="${!override_name:-${default_value}}"
 }
