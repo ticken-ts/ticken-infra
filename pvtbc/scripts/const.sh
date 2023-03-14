@@ -31,8 +31,8 @@ context PEER_ORG_TYPE    "peer"
 
 #--------------------------- LOGS --------------------------------#
 context BASE_LOGS_PATH  "../logs"
-context LOG_FILE        "${BASE_LOGS_PATH}/ticken-network.log"
-context DEBUG_FILE      "${BASE_LOGS_PATH}/ticken-network-debug.log"
+context LOG_FILE        "${BASE_LOGS_PATH}/pvtbc.log"
+context DEBUG_FILE      "${BASE_LOGS_PATH}/pvtbc-debug.log"
 context LOG_ERROR_LINES 2
 #-----------------------------------------------------------------#
 
