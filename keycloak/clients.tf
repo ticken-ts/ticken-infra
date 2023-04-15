@@ -93,6 +93,9 @@ resource "keycloak_openid_client" "client_organizer_app" {
   valid_post_logout_redirect_uris = [
     "http://localhost:5173/*"
   ]
+  web_origins = [
+    "http://localhost:5173"
+  ]
   
   login_theme = "mytheme"
 }
