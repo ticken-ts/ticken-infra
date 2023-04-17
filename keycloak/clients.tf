@@ -1,6 +1,12 @@
 // ------------------------------------------------------------------------------- //
 // --------------------------- attendant's clients ------------------------------- //
 // ------------------------------------------------------------------------------- //
+data "keycloak_openid_client" "attendant_realm_management_client" {
+  realm_id  = keycloak_realm.attendants_realm.id
+  client_id = "realm-management"
+}
+
+
 resource "keycloak_openid_client_scope" "attendant_app_audiences" {
   realm_id    = keycloak_realm.attendants_realm.id
   name        = "attendant-client-audiences"
@@ -34,6 +40,44 @@ resource "keycloak_openid_client" "mobile_attendant_app" {
 
   login_theme = "mytheme"
 }
+
+
+
+resource "keycloak_openid_client" "ticken_ticket_service_in_attendant_realm" {
+  realm_id            = keycloak_realm.attendants_realm.id
+  client_id           = "ticken.ticket.service"
+
+  name                = "ticken ticket service"
+  enabled             = true
+
+  # todo -> this is only during development
+  client_secret       = "7x!A%D*G-KaPdSgVkYp3s5v8y/B?E(H+"
+
+  access_type              = "CONFIDENTIAL"
+  service_accounts_enabled = true
+}
+
+resource "keycloak_openid_client_service_account_role" "manage_users_grant_to_ticket_service_in_organizers_realm" {
+  realm_id                = keycloak_realm.attendants_realm.id
+
+  //noinspection HILUnresolvedReference (golang is not detecting this dependency)
+  service_account_user_id = keycloak_openid_client.ticken_ticket_service_in_attendant_realm.service_account_user_id
+
+  client_id               = data.keycloak_openid_client.attendant_realm_management_client.id
+  role                    = "manage-users"
+}
+
+resource "keycloak_openid_client_service_account_role" "view_users_grant_to_ticket_service_in_organizers_realm" {
+  realm_id                = keycloak_realm.attendants_realm.id
+
+  //noinspection HILUnresolvedReference (golang is not detecting this dependency)
+  service_account_user_id = keycloak_openid_client.ticken_ticket_service_in_attendant_realm.service_account_user_id
+
+  client_id               = data.keycloak_openid_client.attendant_realm_management_client.id
+  role                    = "view-users"
+}
+
+
 
 resource "keycloak_openid_client_default_scopes" "mobile_attendant_app_default_scopes" {
   realm_id  = keycloak_realm.attendants_realm.id
@@ -178,7 +222,6 @@ resource "keycloak_openid_audience_protocol_mapper" "validator_service_audience_
   included_custom_audience = "ticken.validator.service"
 }
 
-
 resource "keycloak_openid_client" "mobile_validator_app" {
   realm_id            = keycloak_realm.validators_realm.id
   client_id           = "mobile.validator.app"
@@ -189,6 +232,7 @@ resource "keycloak_openid_client" "mobile_validator_app" {
   access_type                  = "CONFIDENTIAL"
   standard_flow_enabled        = true # log in validator
   service_accounts_enabled     = true # log in app to request validator login
+  direct_access_grants_enabled = true # todo
 
   valid_redirect_uris = [
     "exp://*", "ticken-validator-app://*"
