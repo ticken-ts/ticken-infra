@@ -83,6 +83,6 @@ function copy_recursively() {
 
 function _rename_privs() {
   # todo -> this should be done inside the kubernetes job that instantiates de CA's and the certificates
-  sh ../k8s-artifacts/scripts/utils/rename-priv-keys.sh ${CLUSTER_VOLUME_PATH}/orgs/orderer-orgs priv.pem
-  sh ../k8s-artifacts/scripts/utils/rename-priv-keys.sh ${CLUSTER_VOLUME_PATH}/orgs/peer-orgs priv.pem
+  bash ../k8s-artifacts/scripts/utils/rename-priv-keys.sh ${CLUSTER_VOLUME_PATH}/orgs/orderer-orgs priv.pem
+  bash ../k8s-artifacts/scripts/utils/rename-priv-keys.sh ${CLUSTER_VOLUME_PATH}/orgs/peer-orgs priv.pem
 }
