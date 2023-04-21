@@ -7,6 +7,7 @@ resource "keycloak_realm" "organizers_realm" {
   display_name      = "organizers"
   login_theme       = "mytheme"
   registration_email_as_username = true
+  login_with_email_allowed = true
   registration_allowed = true
 }
 // ------------------------------------------------------------------------------- //
@@ -23,6 +24,7 @@ resource "keycloak_realm" "attendants_realm" {
   display_name      = "attendants"
   login_theme       = "mytheme"
   registration_email_as_username = true
+  login_with_email_allowed = true
   registration_allowed = true
 }
 // ------------------------------------------------------------------------------- //
