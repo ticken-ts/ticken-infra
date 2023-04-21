@@ -234,6 +234,8 @@ resource "keycloak_openid_client" "mobile_validator_app" {
   service_accounts_enabled     = true # log in app to request validator login
   direct_access_grants_enabled = true # todo
 
+  client_secret = "yCqXN4CvFFZzHnH5b1rNItSnsOAf3lOZ"
+
   valid_redirect_uris = [
     "exp://*", "ticken-validator-app://*"
   ]

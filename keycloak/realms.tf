@@ -39,7 +39,8 @@ resource "keycloak_realm" "validators_realm" {
   display_name      = "validators"
   login_theme       = "mytheme"
   registration_email_as_username = true
-  registration_allowed = true
+  login_with_email_allowed = true
+  registration_allowed = false
 }
 // ------------------------------------------------------------------------------- //
 // ------------------------------------------------------------------------------- //
