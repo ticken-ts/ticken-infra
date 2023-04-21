@@ -3,17 +3,18 @@
 }
 
  #kc-page-title {
-     font-family: "Rubik Light", sans-serif;
-     text-align: center;
+    font-family: "Rubik Light", sans-serif;
+    text-align: center;
  }
 
 
  body {
-     font-family: "Rubik Light", sans-serif;
+    font-family: "Rubik Light", sans-serif;
  }
 
- .login-pf body {
-        background: url("../img/bg-login.jpg") no-repeat center center fixed;");
+ .login-pf-page {
+    background: rgba(76,68,196,1);
+    background: linear-gradient(0deg, rgba(76,68,196,1) 23%, rgba(143,130,182,1) 100%);
  }
 
  .card-pf {
@@ -30,11 +31,11 @@
  }
 
  #kc-form-buttons .btn-lg {
-     background-color: mediumpurple;
+     background-color: rgb(76, 68, 196);
  }
 
 
  :is(input#password, input#password-confirm, input#username, input#email, input#firstName, input#lastName) {
      border-radius: 50px;
-     border-color: mediumpurple;
+     border-color: rgb(76, 68, 196);
  }
