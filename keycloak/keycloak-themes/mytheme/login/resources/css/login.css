@@ -34,6 +34,11 @@
      background-color: rgb(76, 68, 196);
  }
 
+ .pf-c-button {
+    border-radius: 10px;
+    height: 40px;
+ }
+
 
  :is(input#password, input#password-confirm, input#username, input#email, input#firstName, input#lastName) {
      border-radius: 50px;
